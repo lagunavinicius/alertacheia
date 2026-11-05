@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { CheckCircle } from "@phosphor-icons/react";
 import { apagar, enviar } from "../api.js";
 import { useDados } from "../comum.jsx";
@@ -97,7 +98,7 @@ export default function Cadastro() {
         <section className="cartao confirmacao" role="status">
           <CheckCircle size={40} weight="fill" className="confirmacao-icone" aria-hidden="true" />
           <div>
-            <h2 tabIndex={-1} ref={confirmacao}>Cadastro feito, {resultado.nome.split(" ")[0]}!</h2>
+            <h2 tabIndex={-1} ref={confirmacao}>Cadastro feito, {resultado.nome.split(" ")[0]}.</h2>
             <p>
               Os alertas de <strong>{resultado.bairro}</strong> vão chegar no {resultado.telefone} por{" "}
               {resultado.canal === "sms" ? "SMS" : "WhatsApp"}.
@@ -150,7 +151,8 @@ export default function Cadastro() {
             </label>
             <p className="pequeno cinza" id="lgpd-texto">
               Seu número fica guardado de forma cifrada e nunca aparece inteiro para ninguém, nem para a Defesa Civil.
-              Você pode apagar o cadastro quando quiser, logo abaixo (LGPD, art. 18).
+              Você pode apagar o cadastro quando quiser, logo abaixo (LGPD, art. 18).{" "}
+              <Link to="/privacidade">Como usamos os seus dados</Link>.
             </p>
             {erros.consentimento_lgpd && (
               <p className="erro-campo" id="consentimento_lgpd-erro">{erros.consentimento_lgpd}</p>

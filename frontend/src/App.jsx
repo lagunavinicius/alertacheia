@@ -6,6 +6,8 @@ import Estacoes from "./paginas/Estacoes.jsx";
 import Alertas from "./paginas/Alertas.jsx";
 import Cadastro from "./paginas/Cadastro.jsx";
 import Login from "./paginas/Login.jsx";
+import Privacidade from "./paginas/Privacidade.jsx";
+import NaoEncontrada from "./paginas/NaoEncontrada.jsx";
 import { Carregando } from "./comum.jsx";
 
 // As telas com gráficos (Recharts, ~450 kB) só baixam quando abertas: o morador
@@ -98,7 +100,8 @@ export default function App() {
             <Route path="/cadastro" element={<Cadastro />} />
             <Route path="/painel/login" element={<Login />} />
             <Route path="/painel" element={<Painel />} />
-            <Route path="*" element={<p className="vazio">Página não encontrada.</p>} />
+            <Route path="/privacidade" element={<Privacidade />} />
+            <Route path="*" element={<NaoEncontrada />} />
           </Routes>
         </Suspense>
       </main>
@@ -108,7 +111,8 @@ export default function App() {
           <a href="tel:193"><strong>193</strong></a> (Bombeiros).
         </p>
         <p className="rodape-nota">
-          AlertaCheia, Global Solution 2026/2, FIAP. Protótipo acadêmico: leituras e cotas são simuladas.
+          AlertaCheia, Global Solution 2026/2, FIAP. Protótipo acadêmico: leituras e cotas são simuladas.{" "}
+          <NavLink to="/privacidade">Como usamos os seus dados</NavLink>
         </p>
       </footer>
     </>

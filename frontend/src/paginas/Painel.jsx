@@ -40,7 +40,7 @@ function AoVivo({ aoSimular }) {
     <section className="cartao">
       <div className="secao-topo">
         <h2>Agora nas estações</h2>
-        <span className="ao-vivo" aria-hidden="true">ao vivo</span>
+        <span className="ao-vivo" aria-hidden="true">Ao vivo</span>
       </div>
       <ul className="faixa-estacoes">
         {(dados || []).map((e) => (
@@ -53,7 +53,7 @@ function AoVivo({ aoSimular }) {
         ))}
       </ul>
       <div className="simulador">
-        <span className="simulador-rotulo">Treinamento / demonstração</span>
+        <span className="simulador-rotulo">Treinar a equipe:</span>
         <select value={estacao} onChange={(e) => setEstacao(e.target.value)} aria-label="Estação">
           {(dados || []).map((e) => <option key={e.estacao_id} value={e.estacao_id}>{e.bairro}</option>)}
         </select>

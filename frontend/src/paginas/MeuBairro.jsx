@@ -12,6 +12,27 @@ function ouvir(texto) {
   window.speechSynthesis.speak(fala);
 }
 
+// O herói mostra o córrego de verdade: a água sobe no fundo do cartão na proporção do
+// nível medido, e a linha tracejada é a cota de transbordo (a "linha de alerta" da marca).
+// 120% da cota ocupa 72% da altura do cartão; a cota fica em 60%.
+const TETO = 1.2;
+const ALTURA_MAX = 72;
+const alturaAgua = (pct) => `${(Math.min(Math.max(pct || 0, 0), TETO) / TETO) * ALTURA_MAX}%`;
+
+function AguaDoHeroi() {
+  return (
+    <div className="heroi-fundo" aria-hidden="true">
+      <span className="heroi-limite" style={{ bottom: `${ALTURA_MAX / TETO}%` }} />
+      <div className="heroi-agua">
+        <svg viewBox="0 0 1200 40" preserveAspectRatio="none">
+          <path className="onda-agua" d="M0 20 C150 4 300 4 450 20 S750 36 900 20 S1050 4 1200 20 L1200 41 L0 41 Z" />
+          <path className="onda-crista" d="M0 20 C150 4 300 4 450 20 S750 36 900 20 S1050 4 1200 20" />
+        </svg>
+      </div>
+    </div>
+  );
+}
+
 const ORIENTACAO_NORMAL = [
   "Guarde documentos e remédios em saco plástico, num lugar alto.",
   "Salve o número da Defesa Civil: 199.",
@@ -50,7 +71,8 @@ export default function MeuBairro() {
         </select>
       </label>
 
-      <section className={`heroi heroi-${r.classe}`}>
+      <section className={`heroi heroi-${r.classe}`} style={{ "--agua-altura": alturaAgua(ult?.pct_transbordo) }}>
+        <AguaDoHeroi />
         <div className="heroi-topo">
           <SeloRisco risco={risco} grande />
           <span className="heroi-hora">atualizado {horaCurta(ult?.ts)}</span>
