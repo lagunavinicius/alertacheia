@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import mimetypes
 import time
 from collections import Counter
 from contextlib import asynccontextmanager
@@ -35,6 +36,8 @@ logging.basicConfig(level=logging.INFO, format='{"ts":"%(asctime)s","nivel":"%(l
 log = logging.getLogger("alertacheia.api")
 
 FRONTEND = config.RAIZ / "frontend" / "dist"
+# o worker do MapLibre é um módulo .mjs; sem isso o Windows o serve como text/plain e o navegador recusa
+mimetypes.add_type("text/javascript", ".mjs")
 INICIO_PROCESSO = time.time()
 METRICAS: Counter = Counter()
 LATENCIA_MS: Counter = Counter()
@@ -80,9 +83,13 @@ async def cabecalhos_e_metricas(request: Request, chamar):
     resposta.headers["X-Content-Type-Options"] = "nosniff"
     resposta.headers["X-Frame-Options"] = "DENY"
     resposta.headers["Referrer-Policy"] = "no-referrer"
+    # o mapa (MapLibre) busca os tiles e fontes no OpenFreeMap e roda em workers blob:;
+    # nada além disso sai do próprio domínio
     resposta.headers["Content-Security-Policy"] = (
-        "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; "
-        "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; font-src 'self' data:; connect-src 'self'")
+        "default-src 'self'; img-src 'self' data: blob: https://tiles.openfreemap.org; "
+        "style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; "
+        "font-src 'self' data:; connect-src 'self' https://tiles.openfreemap.org; worker-src 'self' blob:; "
+        "child-src blob:")
     return resposta
 
 

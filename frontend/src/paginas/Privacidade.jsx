@@ -1,12 +1,13 @@
 import { Link } from "react-router-dom";
+import { Pagina } from "../comum.jsx";
 
 // O texto descreve exatamente o que o código faz (api/seguranca.py e api/main.py).
 // Se o tratamento de dados mudar, este texto muda junto.
 export default function Privacidade() {
   return (
-    <article className="pagina pagina-estreita leitura">
-      <h1>Como usamos os seus dados</h1>
-      <p className="subtitulo">
+    <Pagina className="max-w-3xl [&_h2]:mt-4 [&_h2]:mb-0 [&_h2]:text-2xl [&_h2]:font-bold [&_li]:text-lg [&_p]:my-0 [&_p]:max-w-[65ch] [&_p]:text-lg [&_ul]:m-0 [&_ul]:grid [&_ul]:gap-2 [&_ul]:pl-6">
+      <h1 className="m-0 text-4xl font-bold md:text-5xl">Como usamos os seus dados</h1>
+      <p className="!text-xl text-texto-2">
         Versão curta: guardamos só o necessário para avisar você de enchente, e você pode apagar tudo quando quiser.
       </p>
 
@@ -35,14 +36,14 @@ export default function Privacidade() {
       <h2>Seus direitos</h2>
       <p>
         Você pode apagar o seu cadastro a qualquer momento, sem precisar falar com ninguém: use{" "}
-        <Link to="/cadastro">"Não quero mais receber alertas"</Link> na tela de cadastro. O cadastro é removido na hora
+        <Link to="/cadastro" className="underline">"Não quero mais receber alertas"</Link> na tela de cadastro. O cadastro é removido na hora
         (LGPD, art. 18).
       </p>
 
-      <p className="nota-prototipo">
+      <p className="mt-4 rounded-md border border-borda bg-superficie px-5 py-4 text-texto-2">
         O AlertaCheia é um protótipo acadêmico (Global Solution 2026/2, FIAP). Os SMS são simulados e nenhuma mensagem
         sai de verdade.
       </p>
-    </article>
+    </Pagina>
   );
 }
