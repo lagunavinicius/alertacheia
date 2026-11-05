@@ -4,14 +4,14 @@ import {
   Bar, BarChart, CartesianGrid, ComposedChart, Legend, Line, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis,
 } from "recharts";
 import { enviar, salvarToken, tokenAtual } from "../api.js";
-import { Carregando, Erro, SeloRisco, horaCurta, riscoDe, useDados } from "../comum.jsx";
+import { Carregando, Erro, SEM_DADO, SeloRisco, horaCurta, riscoDe, useDados } from "../comum.jsx";
 
 function Indicador({ rotulo, valor, unidade, detalhe, destaque }) {
   return (
     <div className={`indicador ${destaque ? "indicador-destaque" : ""}`}>
       <span className="indicador-rotulo">{rotulo}</span>
       <span className="indicador-valor">
-        {valor ?? "—"}
+        {valor ?? SEM_DADO}
         {valor != null && unidade && <small> {unidade}</small>}
       </span>
       {detalhe && <span className="indicador-detalhe">{detalhe}</span>}
@@ -90,8 +90,8 @@ function AlertasOperacao({ versao }) {
           <li key={a.id}>
             <SeloRisco risco={a.risco} />
             <div>
-              <strong>{a.bairro}</strong> · {a.publico === "populacao" ? `SMS para ${a.destinatarios} morador(es)` : "pré-alerta interno"}
-              <span className="cinza"> · {horaCurta(a.criado_em)} · chance {Math.round(a.prob_transbordo * 100)}%</span>
+              <strong>{a.bairro}</strong>: {a.publico === "populacao" ? `SMS para ${a.destinatarios} morador(es)` : "pré-alerta interno"}
+              <span className="cinza">, {horaCurta(a.criado_em)}, chance de {Math.round(a.prob_transbordo * 100)}%</span>
               <p className="pequeno">{a.motivos.join("; ")}</p>
             </div>
             {a.atendido_em ? (
@@ -115,8 +115,8 @@ function Modelo() {
   const comparacao = [
     { nome: "Sem sistema", minutos: 0 },
     { nome: "Régua (cota de alerta)", minutos: a.regra_atual },
-    { nome: "AlertaCheia · SMS", minutos: a.alerta_populacao },
-    { nome: "AlertaCheia · pré-alerta", minutos: a.prealerta_defesa_civil },
+    { nome: "AlertaCheia (SMS)", minutos: a.alerta_populacao },
+    { nome: "AlertaCheia (pré-alerta)", minutos: a.prealerta_defesa_civil },
   ];
   return (
     <section className="cartao">
@@ -138,7 +138,7 @@ function Modelo() {
           <div><dt>ROC AUC</dt><dd>{m.teste_modelo.roc_auc}</dd></div>
           <div><dt>Precisão (modelo × régua)</dt><dd>{m.teste_modelo.precisao} × {m.teste_regra_atual.precisao}</dd></div>
           <div><dt>Falsos alarmes/semana (SMS × régua)</dt><dd>{m.falsos_alarmes_por_semana.alerta_populacao} × {m.falsos_alarmes_por_semana.regra_atual}</dd></div>
-          <div><dt>Enchentes sem aviso prévio</dt><dd>{m.varredura_limiares.find((v) => v.limiar === m.limiar_alerta_populacao)?.eventos_nao_antecipados ?? "—"}</dd></div>
+          <div><dt>Enchentes sem aviso prévio</dt><dd>{m.varredura_limiares.find((v) => v.limiar === m.limiar_alerta_populacao)?.eventos_nao_antecipados ?? SEM_DADO}</dd></div>
         </dl>
       </div>
     </section>
@@ -243,7 +243,7 @@ export default function Painel() {
                 <tbody>
                   {[...dados.por_estacao].sort((a, b) => b.horas_acima_transbordo - a.horas_acima_transbordo).map((e) => (
                     <tr key={e.estacao_id}>
-                      <td>{e.bairro}</td><td>{e.eventos}</td><td>{e.horas_acima_transbordo}</td><td>{e.chuva_mm}</td><td>{e.antecedencia_media_min ?? "—"}</td>
+                      <td>{e.bairro}</td><td>{e.eventos}</td><td>{e.horas_acima_transbordo}</td><td>{e.chuva_mm}</td><td>{e.antecedencia_media_min ?? SEM_DADO}</td>
                     </tr>
                   ))}
                 </tbody>

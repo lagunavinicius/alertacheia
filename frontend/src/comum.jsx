@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { WarningCircle, WifiSlash } from "@phosphor-icons/react";
 import { obter } from "./api.js";
 
 export const RISCO = {
@@ -53,7 +54,8 @@ export function BarraNivel({ nivel, alerta, transbordo }) {
   const classe = nivel >= transbordo ? "emergencia" : nivel >= alerta ? "atencao" : "normal";
   return (
     <div className="barra-nivel" role="img" aria-label={`Nível ${Math.round(nivel)} cm de ${transbordo} cm do limite`}>
-      <div className={`barra-agua barra-${classe}`} style={{ width: `${pct}%` }} />
+      {/* escala em transform (não em width): anima sem recalcular o layout */}
+      <div className={`barra-agua barra-${classe}`} style={{ transform: `scaleX(${pct / 100})` }} />
       <span className="barra-marca" style={{ left: `${pAlerta}%` }} title="cota de alerta" />
       <span className="barra-marca barra-marca-forte" style={{ left: `${pTransb}%` }} title="cota de transbordo" />
     </div>
@@ -65,21 +67,46 @@ export function AvisoOffline({ offline, guardadoEm }) {
   const hora = new Date(guardadoEm).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
   return (
     <div className="aviso-offline" role="status">
-      Sem conexão. Mostrando a última informação recebida, das {hora}. Em perigo, ligue <strong>199</strong>.
+      <WifiSlash size={22} weight="bold" aria-hidden="true" />
+      <span>
+        Sem conexão. Mostrando a última informação recebida, das {hora}. Em perigo, ligue{" "}
+        <a href="tel:199"><strong>199</strong></a>.
+      </span>
     </div>
   );
 }
 
+export const SEM_DADO = "sem dado";
+
 export function horaCurta(iso) {
-  if (!iso) return "—";
+  if (!iso) return SEM_DADO;
   return new Date(iso).toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
 }
 
-export function Carregando({ texto = "Carregando…" }) {
-  return <p className="carregando" role="status">{texto}</p>;
+/** Esqueleto no formato do conteúdo final: a tela não "pula" quando os dados chegam. */
+export function Carregando({ texto = "Carregando as informações do seu bairro" }) {
+  return (
+    <div className="carregando" role="status" aria-live="polite">
+      <span className="sr">{texto}</span>
+      <div className="esqueleto esqueleto-titulo" />
+      <div className="esqueleto esqueleto-bloco" />
+      <div className="esqueleto esqueleto-linha" />
+      <div className="esqueleto esqueleto-linha curta" />
+    </div>
+  );
 }
 
 export function Erro({ erro }) {
   if (!erro) return null;
-  return <p className="erro" role="alert">{erro.message}</p>;
+  const semRede = !erro.status;
+  return (
+    <div className="erro-bloco" role="alert">
+      <WarningCircle size={22} weight="bold" aria-hidden="true" />
+      <p>
+        {semRede
+          ? "Não foi possível falar com o servidor. Confira a internet e tente de novo em instantes."
+          : erro.message}
+      </p>
+    </div>
+  );
 }

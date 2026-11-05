@@ -25,6 +25,10 @@ async function requisitar(caminho, { metodo = "GET", corpo, autenticado = false 
   if (!resp.ok) {
     const erro = new Error(mensagemDeErro(dados.detail) || `erro ${resp.status}`);
     erro.status = resp.status;
+    // erros de validação (422) por campo: o formulário mostra cada um junto do seu campo
+    erro.campos = Array.isArray(dados.detail)
+      ? Object.fromEntries(dados.detail.map((d) => [d.loc?.at(-1), d.msg.replace("Value error, ", "")]))
+      : {};
     throw erro;
   }
   return dados;
@@ -33,7 +37,7 @@ async function requisitar(caminho, { metodo = "GET", corpo, autenticado = false 
 function mensagemDeErro(detalhe) {
   if (!detalhe) return null;
   if (typeof detalhe === "string") return detalhe;
-  if (Array.isArray(detalhe)) return detalhe.map((d) => d.msg.replace("Value error, ", "")).join(" · ");
+  if (Array.isArray(detalhe)) return detalhe.map((d) => d.msg.replace("Value error, ", "")).join(". ");
   return null;
 }
 

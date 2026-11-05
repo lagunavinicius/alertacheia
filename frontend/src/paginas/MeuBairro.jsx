@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { ArrowRight, SpeakerHigh } from "@phosphor-icons/react";
 import { AvisoOffline, BarraNivel, Carregando, Erro, RISCO, SeloRisco, horaCurta, riscoDe, useDados } from "../comum.jsx";
 
 function ouvir(texto) {
@@ -49,20 +50,24 @@ export default function MeuBairro() {
         </select>
       </label>
 
-      <section className={`heroi heroi-${r.classe}`} aria-live="polite" aria-atomic="true">
+      <section className={`heroi heroi-${r.classe}`}>
         <div className="heroi-topo">
           <SeloRisco risco={risco} grande />
           <span className="heroi-hora">atualizado {horaCurta(ult?.ts)}</span>
         </div>
-        <h1>{alerta ? alerta.titulo : r.frase}</h1>
-        <p className="heroi-texto">
-          {alerta
-            ? alerta.mensagem
-            : `O ${est.corpo_dagua} está em ${Math.round((ult?.pct_transbordo || 0) * 100)}% do limite. Não há previsão de transbordo nas próximas 2 horas.`}
-        </p>
+        {/* Só o essencial fica na região "ao vivo": o leitor de tela anuncia quando o risco muda,
+            não a cada leitura de 15 minutos. */}
+        <div aria-live="polite" aria-atomic="true">
+          <h1>{alerta ? alerta.titulo : r.frase}</h1>
+          <p className="heroi-texto">
+            {alerta
+              ? alerta.mensagem
+              : `O ${est.corpo_dagua} está em ${Math.round((ult?.pct_transbordo || 0) * 100)}% do limite. Não há previsão de transbordo nas próximas 2 horas.`}
+          </p>
+        </div>
         {alerta && (
           <button type="button" className="botao botao-claro" onClick={() => ouvir(alerta.texto_audio)}>
-            <span aria-hidden="true">🔊</span> Ouvir o alerta
+            <SpeakerHigh size={22} weight="bold" aria-hidden="true" /> Ouvir o alerta
           </button>
         )}
       </section>
@@ -102,7 +107,9 @@ export default function MeuBairro() {
                   <dd>{ult.umidade_solo_pct >= 75 ? "encharcado" : ult.umidade_solo_pct >= 55 ? "úmido" : "seco"}</dd>
                 </div>
               </dl>
-              <Link to={`/estacoes/${est.estacao_id}`} className="link-seta">Ver as últimas 24 horas</Link>
+              <Link to={`/estacoes/${est.estacao_id}`} className="link-seta">
+                Ver as últimas 24 horas <ArrowRight size={18} weight="bold" aria-hidden="true" />
+              </Link>
             </>
           ) : (
             <p className="vazio">Estação sem leituras.</p>

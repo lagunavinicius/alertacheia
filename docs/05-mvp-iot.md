@@ -23,7 +23,14 @@ São telas em React + Vite, servidas pela própria API em `http://localhost:8080
 - respeito a `prefers-reduced-motion`;
 - linguagem sem jargão;
 - **funciona sem conexão**: a última resposta fica guardada no aparelho, e a tela avisa o
-  horário dela e o telefone 199.
+  horário dela e o telefone 199;
+- no celular, **barra de navegação inferior** com os 4 destinos do morador, ao alcance do polegar;
+- **erros de formulário junto de cada campo**, em português simples, ligados por
+  `aria-describedby`, e o foco vai para o primeiro campo com problema;
+- selos de risco com contraste AA (4,5:1 ou mais) e alvos de toque de 44 px ou mais;
+- a fonte **Barlow** (OFL, auto-hospedada), da mesma família DIN da marca, aparece igual em
+  qualquer aparelho;
+- as telas com gráficos carregam sob demanda, e "Meu bairro" baixa 71 kB de JS (gzip), não 177 kB.
 
 ## 2. IoT: 3 sensores e 4 atuadores (1 pt)
 

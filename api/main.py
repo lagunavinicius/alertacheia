@@ -294,7 +294,9 @@ def spa(caminho: str):
         return FileResponse(arquivo)
     indice = FRONTEND / "index.html"
     if indice.exists():
-        return FileResponse(indice)
+        # o HTML sempre revalida (aponta para os assets com hash do build mais novo);
+        # sem isso, o navegador mostra a versão antiga depois de um deploy
+        return FileResponse(indice, headers={"Cache-Control": "no-cache"})
     return JSONResponse({"mensagem": "API no ar. Frontend não compilado: rode `npm run build` em frontend/.",
                          "documentacao": "/docs"})
 

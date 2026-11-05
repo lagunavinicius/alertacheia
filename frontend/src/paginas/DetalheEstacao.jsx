@@ -1,4 +1,5 @@
 import { Link, useParams } from "react-router-dom";
+import { ArrowLeft } from "@phosphor-icons/react";
 import {
   Bar, CartesianGrid, ComposedChart, Line, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis,
 } from "recharts";
@@ -18,17 +19,19 @@ export default function DetalheEstacao() {
   return (
     <div className="pagina">
       <AvisoOffline offline={offline} guardadoEm={guardadoEm} />
-      <Link to="/estacoes" className="link-voltar">Todas as estações</Link>
+      <Link to="/estacoes" className="link-voltar">
+        <ArrowLeft size={18} weight="bold" aria-hidden="true" /> Todas as estações
+      </Link>
       <div className="titulo-com-selo">
         <h1>{dados.bairro}</h1>
         <SeloRisco risco={riscoDe(dados)} grande />
       </div>
       <p className="subtitulo">
-        {dados.corpo_dagua} · {dados.regiao} · estação {dados.estacao_id} · última leitura {horaCurta(u?.ts)}
+        {dados.corpo_dagua}, {dados.regiao}. Última leitura em {horaCurta(u?.ts)}.
       </p>
 
       <section className="cartao">
-        <h2>Nível da água e chuva · últimas 24 horas</h2>
+        <h2>Nível da água e chuva nas últimas 24 horas</h2>
         <div className="grafico" role="img" aria-label="Gráfico do nível do córrego e da chuva nas últimas 24 horas">
           <ResponsiveContainer width="100%" height={300}>
             <ComposedChart data={serie} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
