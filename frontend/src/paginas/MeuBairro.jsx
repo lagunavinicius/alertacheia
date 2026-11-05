@@ -122,7 +122,7 @@ export default function MeuBairro() {
           </div>
 
           {/* só o essencial é "ao vivo": o leitor de tela anuncia quando o risco muda, não a cada leitura */}
-          <div aria-live="polite" aria-atomic="true" className="grid max-w-3xl gap-4">
+          <div aria-live="polite" aria-atomic="true" className="halo-texto grid max-w-3xl gap-4">
             <SeloRisco risco={risco} grande className="justify-self-start" />
             <h1 id="titulo-risco" className="m-0 text-4xl leading-[1.05] font-bold md:text-6xl">
               {alerta ? alerta.titulo : r.frase}

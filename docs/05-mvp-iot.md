@@ -2,24 +2,39 @@
 
 ## 1. Protótipo: 7 telas funcionais (1 pt)
 
-São telas em React + Vite, servidas pela própria API em `http://localhost:8080`.
+São telas em React 18 + Vite, servidas pela própria API em `http://localhost:8080`.
+
+**Direção visual "Linha d'água".** A água é a interface: na tela "Meu bairro", o fundo sobe
+até o nível real do córrego, e uma linha tracejada laranja marca o limite de transbordo. Dá
+para entender o risco antes de ler qualquer número. O tema é escuro por padrão, porque o
+alerta costuma chegar à noite, no meio do temporal. Há tema claro e alto contraste.
+
+| Camada | Biblioteca | Para quê |
+|---|---|---|
+| Estilo | Tailwind CSS v4 (tokens em CSS) | cores, tipografia e espaçamento num só lugar, com tema claro, escuro e alto contraste |
+| Componentes | padrão shadcn/ui (Radix + `cva` + `cn`) | botão, cartão, abas e painel lateral acessíveis (foco preso, teclado, ARIA) |
+| Mapa | MapLibre GL + react-map-gl, tiles do OpenFreeMap | mapa real de São Paulo, sem chave de API, com os córregos realçados |
+| Movimento | Motion | a água sobe com física de mola; desligado com `prefers-reduced-motion` |
+| Gráficos | Recharts | nível, chuva e chance de transbordo |
+| Avisos | sonner | toast no painel a cada alerta novo |
+
 
 | # | Tela | Rota | Para quem | O que faz |
 |---|---|---|---|---|
-| 1 | **Meu bairro** | `/` | morador | status do bairro em linguagem simples, mensagem da IA, "o que fazer agora", **ouvir o alerta** (voz), abrigo mais próximo, nível e chance de transbordo |
-| 2 | **Estações** | `/estacoes` | morador | mapa esquemático com as 5 estações coloridas pelo risco + cartões com o nível em relação à cota |
+| 1 | **Meu bairro** | `/` | morador | a tela "enche" até o nível real do córrego, com a linha do limite; status em linguagem simples, mensagem da IA, "o que fazer agora", **ouvir o alerta** (voz), abrigo mais próximo e chance de transbordo |
+| 2 | **Estações** | `/estacoes` | morador | mapa real (MapLibre) com as 5 estações coloridas pelo risco, pulsando em alerta; lista do maior para o menor risco e detalhe rápido em painel lateral |
 | 3 | **Detalhe da estação** | `/estacoes/:id` | morador / técnico | nível e chuva das últimas 24 h com as cotas, chance de transbordo calculada pela IA e motivos do alerta |
 | 4 | **Alertas** | `/alertas` | morador | histórico dos alertas, com o SMS enviado e a origem do texto (IA ou determinístico) |
 | 5 | **Receber alertas** | `/cadastro` | morador | cadastro com consentimento LGPD, canal (SMS ou WhatsApp), mobilidade reduzida e **descadastro** |
 | 6 | **Login** | `/painel/login` | Defesa Civil | autenticação (JWT, 1 h) |
-| 7 | **Painel da Defesa Civil** | `/painel` | Defesa Civil | estações ao vivo, alertas da operação (marcar atendido), simulação de chuva, indicadores com filtros e desempenho do modelo |
+| 7 | **Painel da Defesa Civil** | `/painel` | Defesa Civil | mapa ao vivo ao lado da fila de alertas (marcar atendido, aviso na tela a cada alerta novo), simulação de chuva, e em abas: histórico com filtros e indicadores, e desempenho do modelo |
 
 **Acessibilidade e inclusão:**
 - botões de **letra grande** e **alto contraste**;
 - **leitura do alerta em voz alta** (Web Speech API);
 - link "pular para o conteúdo";
 - `aria-live` no status do bairro;
-- foco visível e alvos de toque de 48 px;
+- foco visível (anel laranja) e alvos de toque de 48 px;
 - respeito a `prefers-reduced-motion`;
 - linguagem sem jargão;
 - **funciona sem conexão**: a última resposta fica guardada no aparelho, e a tela avisa o
@@ -30,7 +45,9 @@ São telas em React + Vite, servidas pela própria API em `http://localhost:8080
 - selos de risco com contraste AA (4,5:1 ou mais) e alvos de toque de 44 px ou mais;
 - a fonte **Barlow** (OFL, auto-hospedada), da mesma família DIN da marca, aparece igual em
   qualquer aparelho;
-- as telas com gráficos carregam sob demanda, e "Meu bairro" baixa 71 kB de JS (gzip), não 177 kB.
+- o mapa e os gráficos carregam sob demanda: "Meu bairro" baixa 133 kB de JS (gzip), e o
+  MapLibre (311 kB) só chega nas telas de mapa;
+- números no padrão brasileiro (1.514,3 mm) e testados em 375 px com letra grande, sem rolagem lateral.
 
 ## 2. IoT: 3 sensores e 4 atuadores (1 pt)
 
@@ -93,7 +110,7 @@ O diagrama está em `docs/arquitetura.svg` (também no PDF).
 | API | FastAPI + SQLite | autenticar o sensor, validar, rodar o modelo, máquina de estados, notificar, servir o frontend |
 | IA | scikit-learn + API Claude | prever o transbordo e redigir o alerta |
 | Data Lake | JSON Lines + Parquet (pandas/pyarrow) | histórico bronze → silver → gold |
-| Painéis | React (web) + Power BI | decisão da Defesa Civil |
+| Painéis | React + Tailwind + MapLibre (web) e Power BI | decisão da Defesa Civil |
 | Entrega | Docker + GitHub Actions + GHCR | build, testes, segurança e publicação automáticos |
 
 **Como as áreas se conectam (diferencial "áreas integradas"):**

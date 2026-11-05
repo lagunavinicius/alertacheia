@@ -278,8 +278,8 @@ function Historico({ estacoes }) {
                 <tbody className="tabular-nums">
                   {[...dados.por_estacao].sort((a, b) => b.horas_acima_transbordo - a.horas_acima_transbordo).map((e) => (
                     <tr key={e.estacao_id}>
-                      <td className="font-semibold">{e.bairro}</td><td>{e.eventos}</td><td>{e.horas_acima_transbordo}</td><td>{e.chuva_mm}</td>
-                      <td>{e.antecedencia_media_min ?? SEM_DADO}</td>
+                      <td className="font-semibold">{e.bairro}</td><td>{e.eventos}</td><td>{br(e.horas_acima_transbordo)}</td><td>{br(e.chuva_mm)}</td>
+                      <td>{br(e.antecedencia_media_min) ?? SEM_DADO}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -300,8 +300,8 @@ function Historico({ estacoes }) {
                 <tbody className="tabular-nums">
                   {dados.eventos.map((e) => (
                     <tr key={e.evento_id}>
-                      <td>{horaCurta(e.inicio)}</td><td>{e.estacao_id}</td><td>{e.duracao_min} min</td><td>{e.nivel_pico_cm}</td>
-                      <td>{e.chuva_evento_mm}</td><td>{e.antecedencia_modelo_min} min</td><td>{e.antecedencia_regra_min} min</td>
+                      <td>{horaCurta(e.inicio)}</td><td>{e.estacao_id}</td><td>{br(e.duracao_min)} min</td><td>{br(e.nivel_pico_cm)}</td>
+                      <td>{br(e.chuva_evento_mm)}</td><td>{br(e.antecedencia_modelo_min)} min</td><td>{br(e.antecedencia_regra_min)} min</td>
                     </tr>
                   ))}
                 </tbody>

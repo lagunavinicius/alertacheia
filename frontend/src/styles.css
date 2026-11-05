@@ -152,6 +152,12 @@ html.fonte-grande { --base: 22px; }
 @media (prefers-reduced-motion: no-preference) { .agua-onda { animation: deriva 14s linear infinite; } }
 @keyframes deriva { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 .linha-limite { position: absolute; left: 0; right: 0; height: 0; border-top: 2px dashed var(--linha); }
+/* a linha passa por trás do texto: em tela larga ela some sob a coluna de texto; no celular o texto ganha um halo */
+@media (min-width: 1100px) {
+  .linha-limite { -webkit-mask-image: linear-gradient(to right, transparent calc(50% + 300px), #000 calc(50% + 360px));
+                  mask-image: linear-gradient(to right, transparent calc(50% + 300px), #000 calc(50% + 360px)); }
+}
+.halo-texto { text-shadow: 0 0 14px var(--noite), 0 0 6px var(--noite), 0 0 2px var(--noite); }
 
 /* ---------- risco: cor só no estado ---------- */
 .risco-normal { --risco: var(--normal); --risco-fundo: var(--normal-fundo); }

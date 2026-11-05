@@ -120,15 +120,15 @@ def main() -> None:
 
 <section>{md("03-ia.md")}
 <h3>Evidência: IA funcionando</h3>
-{figura("tela1_meu_bairro_alerta.png", "Alerta redigido pela IA na tela do morador (risco ALERTA, chance de 80%)", "88%")}
+{figura("tela1_meu_bairro_alerta.png", "Alerta redigido pela IA na tela do morador (risco ALERTA, chance de 89%)", "88%")}
 {figura("tela3_detalhe_estacao.png", "Chance de transbordo calculada pelo modelo ao longo do temporal e motivos do alerta", "88%")}
 {bloco_texto("exemplo_alerta_ia.json", "docs/evidencias/exemplo_alerta_ia.json (gerado por run_pipeline.py)")}
 </section>
 
 <section>{md("04-big-data.md")}
 <h3>Evidência: dashboards</h3>
-{figura("tela7b_painel_filtro_indicadores.jpg", "Painel da Defesa Civil com filtro por estação (Pirajuçara): indicadores")}
-{figura("tela7c_painel_grafico_modelo.jpg", "Chuva × nível em % da cota, tabela 'Onde agir primeiro' e desempenho do modelo")}
+{figura("tela7b_painel_historico.png", "Painel da Defesa Civil, aba Histórico: indicadores, chuva × nível em % da cota e 'Onde agir primeiro'")}
+{figura("tela7c_painel_modelo.png", "Painel da Defesa Civil, aba Modelo de IA: antecedência do aviso e desempenho no teste")}
 {opcionais("powerbi_", "Prints do Power BI", "Monte o relatório com powerbi/README.md, salve os prints em docs/evidencias/powerbi_1.png, powerbi_2.png... e rode de novo scripts/gerar_pdf.py.")}
 </section>
 
@@ -136,11 +136,11 @@ def main() -> None:
 <h3>Evidência: telas do protótipo</h3>
 {figura("tela1_meu_bairro_normal.png", "Tela 1 · Meu bairro (normal)", "80%")}
 {figura("tela1_meu_bairro_emergencia.png", "Tela 1 · Meu bairro (emergência, com 'Ouvir o alerta')", "80%")}
-{figura("tela2_estacoes.png", "Tela 2 · Estações (mapa e cartões)", "80%")}
+{figura("tela2_estacoes.png", "Tela 2 · Estações (mapa MapLibre e lista por risco)", "80%")}
 {figura("tela4_alertas.png", "Tela 4 · Alertas emitidos", "80%")}
 {figura("tela5_cadastro.png", "Tela 5 · Receber alertas (consentimento LGPD)", "70%")}
 {figura("tela6_login.png", "Tela 6 · Login da Defesa Civil", "70%")}
-{figura("tela7a_painel_ao_vivo.jpg", "Tela 7 · Painel: estações ao vivo, simulação e alertas da operação", "95%")}
+{figura("tela7a_painel_ao_vivo.png", "Tela 7 · Painel: mapa ao vivo e fila de alertas da operação", "95%")}
 <h3>Evidência: IoT</h3>
 {opcionais("tinkercad_", "Prints do TinkerCad", "Monte o circuito com iot/GUIA_TINKERCAD.md, rode a simulação e salve em docs/evidencias/tinkercad_1_circuito.png e tinkercad_2_serial.png.")}
 </section>
