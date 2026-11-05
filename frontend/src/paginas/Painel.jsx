@@ -6,7 +6,7 @@ import {
 import { toast } from "sonner";
 import { CaretDown, CheckCircle, CloudRain, SignOut } from "@phosphor-icons/react";
 import { enviar, salvarToken, tokenAtual } from "../api.js";
-import { Carregando, Erro, SEM_DADO, SeloRisco, Tubo, classeRisco, horaCurta, riscoDe, useDados } from "../comum.jsx";
+import { Carregando, Erro, SEM_DADO, br, SeloRisco, Tubo, classeRisco, horaCurta, riscoDe, useDados } from "../comum.jsx";
 import MapaEstacoes from "../components/MapaEstacoes.jsx";
 import { Button } from "@/components/ui/button";
 import { Card, CardTitulo } from "@/components/ui/card";
@@ -14,7 +14,6 @@ import { Tabs, TabsConteudo, TabsGatilho, TabsLista } from "@/components/ui/tabs
 import { cn } from "@/lib/utils";
 
 const css = (v) => `var(${v})`;
-const br = (v) => (typeof v === "number" ? v.toLocaleString("pt-BR") : v);
 const frase = (t) => t.charAt(0).toUpperCase() + t.slice(1);
 const SELECT =
   "min-h-11 appearance-none rounded-md border border-borda-forte bg-noite py-2 pr-10 pl-3 font-semibold text-texto hover:border-texto-3";
@@ -161,6 +160,12 @@ function AlertasOperacao({ versao, aoExpirar }) {
   }
 
   const abertos = (dados || []).filter((a) => !a.atendido_em).length;
+  const lista = useRef(null);
+  const [rolavel, setRolavel] = useState(false);
+  useEffect(() => {
+    const el = lista.current;
+    if (el) setRolavel(el.scrollHeight > el.clientHeight + 4);
+  }, [dados]);
   return (
     <section aria-labelledby="titulo-operacao" className="grid min-w-0 content-start gap-4">
       <div className="flex items-center gap-3">
@@ -174,7 +179,10 @@ function AlertasOperacao({ versao, aoExpirar }) {
           <p className="mt-1 mb-0 text-sm text-texto-2">Use a chuva simulada para ver a fila funcionando.</p>
         </div>
       )}
-      <ol className="m-0 grid list-none gap-2 p-0 lg:max-h-[calc(440px+220px)] lg:overflow-y-auto lg:pr-1">
+      {/* no desktop a fila rola dentro da coluna; o degradê no pé mostra que tem mais embaixo */}
+      <div className={cn("relative", rolavel && "lg:after:pointer-events-none lg:after:absolute lg:after:inset-x-0 lg:after:bottom-0 lg:after:h-16 lg:after:bg-gradient-to-t lg:after:from-noite lg:after:to-transparent")}>
+      <ol ref={lista} tabIndex={rolavel ? 0 : undefined} aria-label={rolavel ? "Fila de alertas (role para ver todos)" : undefined}
+        className="m-0 grid list-none gap-2 p-0 lg:max-h-[calc(440px+220px)] lg:overflow-y-auto lg:pr-1 lg:pb-10">
         {(dados || []).map((a) => (
           <li key={a.id} className={cn("rounded-md border border-borda bg-superficie p-4", classeRisco(a.risco), a.atendido_em && "opacity-70")}>
             <div className="flex flex-wrap items-center gap-2">
@@ -201,6 +209,7 @@ function AlertasOperacao({ versao, aoExpirar }) {
           </li>
         ))}
       </ol>
+      </div>
     </section>
   );
 }
@@ -377,12 +386,12 @@ export default function Painel() {
 
   return (
     <div className="mx-auto grid w-full max-w-7xl grid-cols-[minmax(0,1fr)] gap-8 px-5 pt-8 pb-14 md:px-8">
-      <div className="flex flex-wrap items-end justify-between gap-4">
+      <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <h1 className="m-0 text-3xl font-bold md:text-5xl">Painel da Defesa Civil</h1>
           <p className="mt-2 mb-0 text-lg text-texto-2">Mapa ao vivo, fila de alertas e o histórico da estação chuvosa.</p>
         </div>
-        <Button variant="fantasma" size="pequeno" onClick={() => { salvarToken(null); navegar("/"); }}>
+        <Button variant="contorno" size="pequeno" className="md:mt-2" onClick={() => { salvarToken(null); navegar("/"); }}>
           <SignOut size={18} aria-hidden="true" /> Sair
         </Button>
       </div>

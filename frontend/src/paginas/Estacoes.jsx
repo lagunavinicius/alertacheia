@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, CaretRight, HouseLine } from "@phosphor-icons/react";
-import { AvisoOffline, BarraNivel, Carregando, Erro, RISCO, SeloRisco, Tubo, horaCurta, riscoDe, useDados } from "../comum.jsx";
+import { AvisoOffline, BarraNivel, br, Carregando, Erro, RISCO, SeloRisco, Tubo, horaCurta, riscoDe, useDados } from "../comum.jsx";
 import MapaEstacoes from "../components/MapaEstacoes.jsx";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
@@ -19,14 +19,11 @@ function DetalheRapido({ estacao }) {
             <p className="m-0 font-semibold">chance de transbordar nas próximas 2 horas</p>
           </div>
           <div className="grid gap-2">
-            <div className="flex justify-between text-sm text-texto-2">
-              <span>Nível {Math.round(u.nivel_cm)} cm</span>
-              <span>limite {estacao.cota_transbordo_cm} cm</span>
-            </div>
+            <span className="text-sm text-texto-2">Nível agora: {Math.round(u.nivel_cm)} cm</span>
             <BarraNivel nivel={u.nivel_cm} alerta={estacao.cota_alerta_cm} transbordo={estacao.cota_transbordo_cm} />
           </div>
           <dl className="m-0 grid grid-cols-2 gap-3">
-            <div className="rounded-md bg-superficie-2 p-3"><dt className="text-sm text-texto-3">Chuva em 1 h</dt><dd className="m-0 text-lg font-semibold">{u.chuva_1h_mm} mm</dd></div>
+            <div className="rounded-md bg-superficie-2 p-3"><dt className="text-sm text-texto-3">Chuva em 1 h</dt><dd className="m-0 text-lg font-semibold">{br(u.chuva_1h_mm)} mm</dd></div>
             <div className="rounded-md bg-superficie-2 p-3"><dt className="text-sm text-texto-3">Última leitura</dt><dd className="m-0 text-lg font-semibold">{horaCurta(u.ts)}</dd></div>
           </dl>
         </>

@@ -101,7 +101,7 @@ function LinkMenu({ para, rotulo, Icone, fim, inferior }) {
           "relative flex items-center no-underline transition-colors",
           inferior
             ? "min-h-[68px] flex-col justify-center gap-1 px-1 text-center text-[0.75rem] leading-tight [overflow-wrap:anywhere]"
-            : "min-h-12 gap-2 rounded-full px-4 font-semibold",
+            : "min-h-12 gap-2 whitespace-nowrap rounded-full px-3 font-semibold xl:px-4",
           isActive ? "text-[#eef2f7]" : "text-[#eef2f7]/65 hover:text-[#eef2f7]",
           isActive && !inferior && "bg-white/10",
           isActive && inferior && "after:absolute after:inset-x-6 after:top-0 after:h-[3px] after:rounded-b after:bg-[#ff6a2b]"
@@ -110,7 +110,7 @@ function LinkMenu({ para, rotulo, Icone, fim, inferior }) {
     >
       {({ isActive }) => (
         <>
-          <Icone size={inferior ? 24 : 20} weight={isActive ? "fill" : "regular"} aria-hidden="true" />
+          <Icone size={inferior ? 24 : 20} weight={isActive ? "fill" : "regular"} aria-hidden="true" className={inferior ? undefined : "max-xl:hidden"} />
           <span>{rotulo}</span>
         </>
       )}
@@ -128,7 +128,7 @@ export default function App() {
       <header className="sticky top-0 z-30 border-b border-white/10 bg-[#0a1322]/92 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-2.5 md:px-8">
           <Marca />
-          <nav className="hidden items-center gap-1 md:flex" aria-label="Principal">
+          <nav className="hidden items-center gap-1 lg:flex" aria-label="Principal">
             {MENU.map((m) => <LinkMenu key={m.para} {...m} />)}
           </nav>
           <div className="flex items-center gap-1.5">
@@ -143,7 +143,7 @@ export default function App() {
               }
             >
               <ShieldCheck size={20} weight="bold" aria-hidden="true" />
-              <span className="max-[420px]:sr">Defesa Civil</span>
+              <span className="max-[420px]:sr lg:max-xl:sr">Defesa Civil</span>
             </NavLink>
           </div>
         </div>
@@ -176,9 +176,9 @@ export default function App() {
         </p>
       </footer>
 
-      {/* no celular, os 4 destinos do morador ficam ao alcance do polegar */}
+      {/* no celular e no tablet, os 4 destinos do morador ficam ao alcance do polegar */}
       <nav
-        className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-4 border-t border-white/10 bg-[#0a1322] pb-[env(safe-area-inset-bottom)] md:hidden"
+        className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-4 border-t border-white/10 bg-[#0a1322] pb-[env(safe-area-inset-bottom)] lg:hidden"
         aria-label="Principal (celular)"
       >
         {MENU.map((m) => <LinkMenu key={m.para} {...m} inferior />)}

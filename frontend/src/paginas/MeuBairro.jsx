@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { LazyMotion, domAnimation, m, useReducedMotion } from "motion/react";
 import { ArrowRight, CaretDown, Drop, CloudRain, Plant, SpeakerHigh } from "@phosphor-icons/react";
-import { AvisoOffline, Carregando, Erro, RISCO, SeloRisco, classeRisco, horaCurta, riscoDe, useDados } from "../comum.jsx";
+import { AvisoOffline, Carregando, Erro, RISCO, br, SeloRisco, classeRisco, horaCurta, riscoDe, useDados } from "../comum.jsx";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 // 125% da cota enche 82% da tela; a cota fica em 66%.
 const TETO = 1.25;
 const ALTURA_MAX = 0.82;
+const LIMITE = (1 / TETO) * ALTURA_MAX * 100; // altura da linha do limite, em % da tela
 const fracaoAgua = (pct) => (Math.min(Math.max(pct || 0, 0), TETO) / TETO) * ALTURA_MAX;
 
 const ORIENTACAO_NORMAL = [
@@ -45,9 +46,11 @@ function Agua({ pct }) {
           <path d="M0 13 C150 0 450 0 600 13 S1050 26 1200 13 S1650 0 1800 13 S2250 26 2400 13 V26 H0 Z" />
         </svg>
       </m.div>
-      <div className="linha-limite" style={{ bottom: `${(1 / TETO) * ALTURA_MAX * 100}%` }}>
-        <span className="absolute right-4 bottom-1.5 text-sm font-semibold text-linha max-md:hidden">limite do córrego</span>
-      </div>
+      {/* a linha tem máscara (some ou esmaece atrás do texto); o rótulo fica fora dela para não esmaecer junto */}
+      <div className="linha-limite" style={{ bottom: `${LIMITE}%` }} />
+      <span className="absolute right-4 text-sm font-semibold text-linha" style={{ bottom: `calc(${LIMITE}% + 6px)` }}>
+        limite do córrego
+      </span>
     </div>
   );
 }
@@ -108,7 +111,7 @@ export default function MeuBairro() {
         className={cn(
           "tela-agua flex min-h-[calc(100dvh-64px-var(--barra-inferior,0px))] flex-col",
           classeRisco(risco),
-          "bg-[radial-gradient(120%_70%_at_0%_0%,var(--risco-fundo),transparent_60%)]"
+          "bg-[radial-gradient(120%_70%_at_0%_0%,var(--risco-fundo),transparent_60%)] claro:bg-[radial-gradient(80%_45%_at_0%_0%,var(--risco-fundo),transparent_70%)]"
         )}
         aria-labelledby="titulo-risco"
       >
@@ -175,7 +178,7 @@ export default function MeuBairro() {
         <section aria-labelledby="titulo-agora" className="grid content-start gap-3">
           <h2 id="titulo-agora" className="m-0 mb-2 text-2xl font-bold">O córrego agora</h2>
           <Dado Icone={Drop} rotulo="Nível da água" valor={ult ? `${Math.round(ult.nivel_cm)} cm de ${est.cota_transbordo_cm} cm` : "sem dado"} />
-          <Dado Icone={CloudRain} rotulo="Chuva na última hora" valor={ult ? `${ult.chuva_1h_mm} mm` : "sem dado"} />
+          <Dado Icone={CloudRain} rotulo="Chuva na última hora" valor={ult ? `${br(ult.chuva_1h_mm)} mm` : "sem dado"} />
           <Dado
             Icone={Plant}
             rotulo="Solo"

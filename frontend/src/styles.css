@@ -132,7 +132,7 @@ html.fonte-grande { --base: 22px; }
   main { outline: none; overflow-x: clip; }
 }
 @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
-@media (max-width: 767px) { :root { --barra-inferior: calc(68px + env(safe-area-inset-bottom)); } }
+@media (max-width: 1023px) { :root { --barra-inferior: calc(68px + env(safe-area-inset-bottom)); } }
 
 /* ---------- utilitários próprios ---------- */
 @utility sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
@@ -146,18 +146,21 @@ html.fonte-grande { --base: 22px; }
   position: absolute; inset: 0; background: linear-gradient(180deg, var(--agua) 0%, var(--agua-funda) 38%);
   opacity: 0.55;
 }
-[data-tema="claro"] .agua-corpo { opacity: 0.9; }
+/* no claro a água é rasa e clara: texto escuro por cima mantém contraste AA (≈4,7:1 no cinza do parágrafo) */
+[data-tema="claro"] .agua-corpo { opacity: 1; background: linear-gradient(180deg, #a9c8ea 0%, var(--agua-funda) 32%); }
+[data-tema="claro"] .agua-onda path { fill: #a9c8ea; }
 .agua-onda { position: absolute; left: 0; width: 200%; height: 26px; bottom: calc(100% - 1px); }
 .agua-onda path { fill: var(--agua); }
 @media (prefers-reduced-motion: no-preference) { .agua-onda { animation: deriva 14s linear infinite; } }
 @keyframes deriva { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 .linha-limite { position: absolute; left: 0; right: 0; height: 0; border-top: 2px dashed var(--linha); }
 /* a linha passa por trás do texto: em tela larga ela some sob a coluna de texto; no celular o texto ganha um halo */
+.linha-limite { --mascara: linear-gradient(to right, rgb(0 0 0 / 0.28) 0, rgb(0 0 0 / 0.28) calc(100% - 120px), #000 calc(100% - 72px));
+                -webkit-mask-image: var(--mascara); mask-image: var(--mascara); }
 @media (min-width: 1100px) {
-  .linha-limite { -webkit-mask-image: linear-gradient(to right, transparent calc(50% + 300px), #000 calc(50% + 360px));
-                  mask-image: linear-gradient(to right, transparent calc(50% + 300px), #000 calc(50% + 360px)); }
+  .linha-limite { --mascara: linear-gradient(to right, transparent calc(50% + 300px), #000 calc(50% + 360px)); }
 }
-.halo-texto { text-shadow: 0 0 14px var(--noite), 0 0 6px var(--noite), 0 0 2px var(--noite); }
+:root:not([data-tema="claro"]) .halo-texto { text-shadow: 0 0 14px var(--noite), 0 0 6px var(--noite); }
 
 /* ---------- risco: cor só no estado ---------- */
 .risco-normal { --risco: var(--normal); --risco-fundo: var(--normal-fundo); }

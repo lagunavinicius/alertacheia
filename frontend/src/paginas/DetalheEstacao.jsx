@@ -3,7 +3,7 @@ import {
   Area, Bar, CartesianGrid, ComposedChart, Line, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis,
 } from "recharts";
 import { ArrowLeft } from "@phosphor-icons/react";
-import { AvisoOffline, BarraNivel, Carregando, Erro, Pagina, SeloRisco, horaCurta, riscoDe, useDados } from "../comum.jsx";
+import { AvisoOffline, BarraNivel, br, Carregando, Erro, Pagina, SeloRisco, horaCurta, riscoDe, useDados } from "../comum.jsx";
 import { Card } from "@/components/ui/card";
 
 const hora = (ts) => ts.slice(11, 16);
@@ -46,7 +46,7 @@ export default function DetalheEstacao() {
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           <Numero valor={`${Math.round((u.prob_transbordo || 0) * 100)}%`} rotulo="chance de transbordar em 2 h" />
           <Numero valor={`${Math.round(u.nivel_cm)}`} rotulo={`cm de água (limite ${dados.cota_transbordo_cm} cm)`} />
-          <Numero valor={`${u.chuva_1h_mm}`} rotulo="mm de chuva na última hora" />
+          <Numero valor={br(u.chuva_1h_mm)} rotulo="mm de chuva na última hora" />
         </div>
       )}
       {u && <BarraNivel nivel={u.nivel_cm} alerta={dados.cota_alerta_cm} transbordo={dados.cota_transbordo_cm} />}
@@ -64,7 +64,7 @@ export default function DetalheEstacao() {
               </defs>
               <CartesianGrid stroke={css("--borda")} vertical={false} />
               <XAxis dataKey="ts" tickFormatter={hora} minTickGap={48} stroke={css("--borda-forte")} />
-              <YAxis yAxisId="nivel" domain={[0, tetoNivel]} unit=" cm" width={72} stroke={css("--borda-forte")} allowDecimals={false} />
+              <YAxis yAxisId="nivel" domain={[0, tetoNivel]} ticks={Array.from({ length: tetoNivel / 50 + 1 }, (_, i) => i * 50)} unit=" cm" width={72} stroke={css("--borda-forte")} />
               <YAxis yAxisId="chuva" orientation="right" unit=" mm" width={56} stroke={css("--borda-forte")} />
               <Tooltip labelFormatter={horaCurta} />
               <Bar yAxisId="chuva" dataKey="chuva_mm" name="chuva (mm/15 min)" fill={css("--agua")} radius={[3, 3, 0, 0]} isAnimationActive={false} />
@@ -91,8 +91,10 @@ export default function DetalheEstacao() {
               <XAxis dataKey="ts" tickFormatter={hora} minTickGap={48} stroke={css("--borda-forte")} />
               <YAxis domain={[0, 100]} unit="%" width={72} stroke={css("--borda-forte")} />
               <Tooltip labelFormatter={horaCurta} />
-              <ReferenceLine y={60} stroke={css("--atencao")} strokeDasharray="4 4" />
-              <ReferenceLine y={80} stroke={css("--linha")} strokeDasharray="4 4" />
+              <ReferenceLine y={60} stroke={css("--atencao")} strokeDasharray="4 4"
+                label={{ value: "pré-alerta 60%", fill: css("--atencao"), fontSize: 12, position: "insideBottomLeft" }} />
+              <ReferenceLine y={80} stroke={css("--linha")} strokeDasharray="4 4"
+                label={{ value: "SMS 80%", fill: css("--linha"), fontSize: 12, position: "insideTopLeft" }} />
               <Line type="stepAfter" dataKey="chance" name="chance (%)" stroke={css("--linha")} strokeWidth={2.5} dot={false} isAnimationActive={false} />
             </ComposedChart>
           </ResponsiveContainer>
@@ -102,8 +104,8 @@ export default function DetalheEstacao() {
       {dados.alerta_ativo && (
         <Card>
           <h2 className="m-0 mb-3 text-xl font-bold">Por que o sistema emitiu o alerta</h2>
-          <ul className="m-0 grid gap-1.5 pl-5 text-lg">
-            {dados.alerta_ativo.motivos.map((m) => <li key={m}>{m}</li>)}
+          <ul className="m-0 grid list-disc gap-1.5 pl-5 text-lg marker:text-linha">
+            {dados.alerta_ativo.motivos.map((m) => <li key={m}>{m.charAt(0).toUpperCase() + m.slice(1)}</li>)}
           </ul>
         </Card>
       )}

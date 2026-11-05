@@ -12,6 +12,9 @@ export const RISCO = {
 
 export const SEM_DADO = "sem dado";
 
+/** Número no padrão brasileiro (1.514,3). Texto passa direto. */
+export const br = (v) => (typeof v === "number" ? v.toLocaleString("pt-BR") : v);
+
 export function riscoDe(estacao) {
   return estacao?.ultima_leitura?.risco || "NORMAL";
 }
@@ -59,26 +62,34 @@ export function SeloRisco({ risco, grande = false, className }) {
   );
 }
 
-/** Régua horizontal: a água até o nível, com a cota de alerta e a de transbordo marcadas. */
-export function BarraNivel({ nivel, alerta, transbordo, className }) {
+/** Régua horizontal: a água até o nível, com a cota de alerta e a de transbordo marcadas e nomeadas. */
+export function BarraNivel({ nivel, alerta, transbordo, rotulos = true, className }) {
   const max = transbordo * 1.25;
   const pct = Math.min(100, (nivel / max) * 100);
   const classe = nivel >= transbordo ? "emergencia" : nivel >= alerta ? "atencao" : "normal";
+  const posAlerta = (alerta / max) * 100;
+  const posLimite = (transbordo / max) * 100;
   return (
-    <div
-      className={cn("relative h-3 rounded-full bg-superficie-3", className)}
-      role="img"
-      aria-label={`Nível ${Math.round(nivel)} cm de ${transbordo} cm do limite`}
-    >
-      <div
-        className={cn(
-          "absolute inset-y-0 left-0 w-full origin-left rounded-full transition-transform duration-700 ease-out",
-          classe === "normal" ? "bg-rio" : `risco-${classe} bg-risco`
-        )}
-        style={{ transform: `scaleX(${pct / 100})` }}
-      />
-      <span className="absolute -inset-y-1 w-0.5 bg-atencao" style={{ left: `${(alerta / max) * 100}%` }} title="cota de alerta" />
-      <span className="absolute -inset-y-1.5 w-[3px] rounded bg-linha" style={{ left: `${(transbordo / max) * 100}%` }} title="cota de transbordo" />
+    <div className={cn("grid gap-1.5", className)}>
+      <div className="relative h-3 rounded-full bg-superficie-3" role="img"
+        aria-label={`Nível ${Math.round(nivel)} cm. Cota de alerta ${alerta} cm, limite do córrego ${transbordo} cm`}>
+        <div
+          className={cn(
+            "absolute inset-y-0 left-0 w-full origin-left rounded-full transition-transform duration-700 ease-out",
+            classe === "normal" ? "bg-rio" : `risco-${classe} bg-risco`
+          )}
+          style={{ transform: `scaleX(${pct / 100})` }}
+        />
+        <span className="absolute -inset-y-1 w-0.5 bg-atencao" style={{ left: `${posAlerta}%` }} />
+        <span className="absolute -inset-y-1.5 w-[3px] rounded bg-linha" style={{ left: `${posLimite}%` }} />
+      </div>
+      {rotulos && (
+        // "alerta" encosta à esquerda da marca e "limite" à direita: os dois nunca se cobrem
+        <div className="relative h-5 text-xs font-semibold" aria-hidden="true">
+          <span className="absolute -translate-x-full pr-1.5 whitespace-nowrap text-atencao" style={{ left: `${posAlerta}%` }}>alerta {alerta} cm</span>
+          <span className="absolute pl-1.5 whitespace-nowrap text-linha" style={{ left: `${posLimite}%` }}>limite {transbordo} cm</span>
+        </div>
+      )}
     </div>
   );
 }
