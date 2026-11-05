@@ -69,8 +69,9 @@ a { color: var(--tinta); }
 .pular:focus { left: 0.5rem; }
 
 /* ---------- topo ---------- */
-.topo { background: var(--tinta); color: var(--papel); }
-html.alto-contraste .topo { background: #000; border-bottom: 1px solid var(--linha); }
+/* o topo é sempre escuro com texto claro, em qualquer modo: cores fixas, não os tokens do tema */
+.topo { background: #0f1b2d; color: #f5f3ee; }
+html.alto-contraste .topo { background: #050505; border-bottom: 1px solid var(--linha); }
 .topo-linha { max-width: 1180px; margin: 0 auto; padding: 0.8rem 1.25rem 0.2rem; display: flex; align-items: center; justify-content: space-between; }
 .marca { display: flex; align-items: center; gap: 0.55rem; color: inherit; text-decoration: none; min-height: 44px; }
 .marca svg { width: 34px; height: 34px; flex: none; }
@@ -102,8 +103,11 @@ html.alto-contraste .topo { background: #000; border-bottom: 1px solid var(--lin
 .menu a.active { color: #fff; border-bottom-color: var(--alerta-vivo); }
 
 /* ---------- layout ---------- */
-main { outline: none; }
-.pagina { max-width: 980px; margin: 0 auto; padding: 1.75rem 1.25rem 3rem; display: grid; gap: 1.25rem; }
+/* clip: tooltips e camadas posicionadas (Recharts) não criam rolagem lateral na página */
+main { outline: none; overflow-x: clip; }
+/* minmax(0, 1fr): a coluna nunca cresce além da tela por causa de uma tabela larga
+   (a tabela rola dentro de .tabela-rolagem, a página não) */
+.pagina { max-width: 980px; margin: 0 auto; padding: 1.75rem 1.25rem 3rem; display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.25rem; }
 .pagina-larga { max-width: 1180px; }
 .pagina-estreita { max-width: 620px; }
 .subtitulo { color: var(--cinza); margin: -0.6rem 0 0.5rem; max-width: 62ch; }
@@ -377,13 +381,13 @@ th { color: var(--cinza); font-weight: 600; font-size: 0.88rem; }
   /* barra inferior com os 4 destinos do morador, ao alcance do polegar */
   .menu {
     position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; max-width: none; padding: 0 0 env(safe-area-inset-bottom);
-    display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+    display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0;
     background: var(--tinta); border-top: 1px solid rgba(245,243,238,0.15);
   }
-  html.alto-contraste .menu { background: #000; }
+  html.alto-contraste .menu { background: #050505; }
   .menu a {
     flex-direction: column; justify-content: center; gap: 0.15rem; min-height: 64px; padding: 0.35rem 0.2rem;
-    font-size: 0.78rem; line-height: 1.15; text-align: center; white-space: normal;
+    font-size: 0.78rem; line-height: 1.15; text-align: center; white-space: normal; overflow-wrap: anywhere; hyphens: auto;
     border-bottom: 0; border-top: 3px solid transparent;
   }
   .menu a svg { width: 24px; height: 24px; }
@@ -399,6 +403,7 @@ th { color: var(--cinza); font-weight: 600; font-size: 0.88rem; }
 }
 @media (max-width: 400px) {
   .marca-nome { font-size: 1.1rem; }
+  html.fonte-grande .marca-nome { display: none; }   /* o símbolo fica, com o nome acessível do link */
   .acessibilidade button { width: 44px; height: 44px; }
   .topo-dc { font-size: 0; gap: 0; padding: 0 0.7rem; }   /* só o ícone, com nome acessível */
   .topo-dc svg { width: 22px; height: 22px; }
