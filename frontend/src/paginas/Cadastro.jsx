@@ -5,6 +5,7 @@ import { apagar, enviar } from "../api.js";
 import { Pagina, useDados } from "../comum.jsx";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Selecao } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 
 const VAZIO = { nome: "", telefone: "", estacao_id: "EST-03", mobilidade_reduzida: false, canal: "sms", consentimento_lgpd: false };
@@ -60,10 +61,11 @@ export default function Cadastro() {
     if (resultado) confirmacao.current?.focus();
   }, [resultado]);
 
-  const mudar = (campo) => (e) => {
-    setForm({ ...form, [campo]: e.target.type === "checkbox" ? e.target.checked : e.target.value });
+  const mudarValor = (campo, valor) => {
+    setForm({ ...form, [campo]: valor });
     if (erros[campo]) setErros({ ...erros, [campo]: undefined });
   };
+  const mudar = (campo) => (e) => mudarValor(campo, e.target.type === "checkbox" ? e.target.checked : e.target.value);
   const descrito = (id, dica) => [dica && `${id}-dica`, erros[id] && `${id}-erro`].filter(Boolean).join(" ") || undefined;
 
   async function cadastrar(e) {
@@ -141,13 +143,9 @@ export default function Cadastro() {
                   aria-required="true" aria-invalid={!!erros.telefone} aria-describedby={descrito("telefone", true)} />
               </Campo>
               <Campo id="estacao_id" rotulo="Bairro" erro={erros.estacao_id}>
-                <div className="relative">
-                  <select id="estacao_id" className={cn(CLASSE_CAMPO, "appearance-none pr-11")} value={form.estacao_id} onChange={mudar("estacao_id")}
-                    aria-invalid={!!erros.estacao_id} aria-describedby={descrito("estacao_id")}>
-                    {(estacoes || []).map((e) => <option key={e.estacao_id} value={e.estacao_id}>{e.bairro}</option>)}
-                  </select>
-                  <CaretDown size={18} weight="bold" className="pointer-events-none absolute top-1/2 right-4 -translate-y-1/2 text-texto-2" aria-hidden="true" />
-                </div>
+                <Selecao id="estacao_id" value={form.estacao_id} onChange={(v) => mudarValor("estacao_id", v)}
+                  opcoes={(estacoes || []).map((e) => ({ valor: e.estacao_id, rotulo: e.bairro, detalhe: e.corpo_dagua }))}
+                  aria-invalid={!!erros.estacao_id} aria-describedby={descrito("estacao_id")} />
               </Campo>
               <fieldset className="m-0 grid gap-2 border-0 p-0">
                 <legend className="mb-2 font-semibold">Como prefere receber</legend>

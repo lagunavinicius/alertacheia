@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { LazyMotion, domAnimation, m, useReducedMotion } from "motion/react";
-import { ArrowRight, CaretDown, Drop, CloudRain, Plant, SpeakerHigh } from "@phosphor-icons/react";
+import { ArrowRight, CloudRain, Drop, MapPin, Plant, SpeakerHigh } from "@phosphor-icons/react";
 import { AvisoOffline, Carregando, Erro, RISCO, br, SeloRisco, classeRisco, horaCurta, riscoDe, useDados } from "../comum.jsx";
 import { Button } from "@/components/ui/button";
+import { Selecao } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 
 // A tela inteira é o córrego: a água sobe na proporção do nível medido e a linha
@@ -56,21 +57,13 @@ function Agua({ pct }) {
 }
 
 function SeletorBairro({ estacoes, valor, onChange }) {
-  return (
-    <label className="relative inline-flex max-w-full items-center">
-      <span className="sr">Seu bairro</span>
-      <select
-        value={valor}
-        onChange={(e) => onChange(e.target.value)}
-        className="min-h-12 max-w-full appearance-none truncate rounded-full border border-borda-forte bg-superficie/70 py-2 pr-11 pl-5 text-base font-semibold text-texto backdrop-blur hover:border-texto-2"
-      >
-        {estacoes.map((e) => (
-          <option key={e.estacao_id} value={e.estacao_id}>{e.bairro}, {e.corpo_dagua}</option>
-        ))}
-      </select>
-      <CaretDown size={18} weight="bold" className="pointer-events-none absolute right-4 text-texto-2" aria-hidden="true" />
-    </label>
-  );
+  const opcoes = estacoes.map((e) => ({
+    valor: e.estacao_id,
+    rotulo: e.bairro,
+    detalhe: e.corpo_dagua,
+    fim: <SeloRisco risco={riscoDe(e)} className="shrink-0" />,
+  }));
+  return <Selecao variante="pilula" icone={MapPin} aria-label="Seu bairro" value={valor} onChange={onChange} opcoes={opcoes} largura="md:w-96" />;
 }
 
 function Dado({ Icone, rotulo, valor }) {

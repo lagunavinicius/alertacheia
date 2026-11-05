@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import {
   Bar, BarChart, CartesianGrid, ComposedChart, Legend, Line, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis,
@@ -10,24 +10,21 @@ import { Carregando, Erro, SEM_DADO, br, SeloRisco, Tubo, classeRisco, horaCurta
 import MapaEstacoes from "../components/MapaEstacoes.jsx";
 import { Button } from "@/components/ui/button";
 import { Card, CardTitulo } from "@/components/ui/card";
+import { Selecao } from "@/components/ui/select";
 import { Tabs, TabsConteudo, TabsGatilho, TabsLista } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 
 const css = (v) => `var(${v})`;
 const frase = (t) => t.charAt(0).toUpperCase() + t.slice(1);
-const SELECT =
-  "min-h-11 appearance-none rounded-md border border-borda-forte bg-noite py-2 pr-10 pl-3 font-semibold text-texto hover:border-texto-3";
 const INPUT_DATA = "min-h-11 rounded-md border border-borda-forte bg-noite px-3 text-texto [color-scheme:dark] claro:[color-scheme:light]";
 
-function Seletor({ rotulo, className, children, ...props }) {
+function Seletor({ rotulo, className, value, onChange, opcoes }) {
+  const id = useId();
   return (
-    <label className={cn("grid gap-1 text-sm text-texto-2", className)}>
-      {rotulo}
-      <span className="relative">
-        <select className={cn(SELECT, "w-full")} {...props}>{children}</select>
-        <CaretDown size={16} weight="bold" className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-texto-2" aria-hidden="true" />
-      </span>
-    </label>
+    <div className={cn("grid gap-1 text-sm text-texto-2", className)}>
+      <label htmlFor={id}>{rotulo}</label>
+      <Selecao id={id} variante="compacto" className="text-base" value={value} onChange={onChange} opcoes={opcoes} />
+    </div>
   );
 }
 
@@ -105,14 +102,10 @@ function AoVivo({ aoSimular }) {
       </ul>
       <div className="flex flex-wrap items-end gap-3 rounded-lg border border-dashed border-borda-forte p-4">
         <p className="m-0 w-full font-semibold">Treinar a equipe com uma chuva simulada</p>
-        <Seletor rotulo="Estação" value={estacao} onChange={(e) => setEstacao(e.target.value)} className="min-w-40 flex-1 sm:flex-none">
-          {(dados || []).map((e) => <option key={e.estacao_id} value={e.estacao_id}>{e.bairro}</option>)}
-        </Seletor>
-        <Seletor rotulo="Cenário" value={cenario} onChange={(e) => setCenario(e.target.value)} className="min-w-40 flex-1 sm:flex-none">
-          <option value="tempestade">Temporal</option>
-          <option value="chuva_moderada">Chuva moderada</option>
-          <option value="estiagem">Sem chuva</option>
-        </Seletor>
+        <Seletor rotulo="Estação" value={estacao} onChange={setEstacao} className="min-w-44 flex-1 sm:flex-none"
+          opcoes={(dados || []).map((e) => ({ valor: e.estacao_id, rotulo: e.bairro }))} />
+        <Seletor rotulo="Cenário" value={cenario} onChange={setCenario} className="min-w-44 flex-1 sm:flex-none"
+          opcoes={[{ valor: "tempestade", rotulo: "Temporal" }, { valor: "chuva_moderada", rotulo: "Chuva moderada" }, { valor: "estiagem", rotulo: "Sem chuva" }]} />
         <Button variant="contorno" onClick={simular} disabled={simulando} className="w-full sm:w-auto">
           <CloudRain size={20} aria-hidden="true" /> {simulando ? "Iniciando…" : "Simular chuva"}
         </Button>
@@ -225,10 +218,8 @@ function Historico({ estacoes }) {
   return (
     <div className="grid grid-cols-[minmax(0,1fr)] gap-5">
       <form className="flex flex-wrap items-end gap-3" onSubmit={(e) => e.preventDefault()}>
-        <Seletor rotulo="Estação" value={filtros.estacao_id} onChange={mudar("estacao_id")} className="min-w-44">
-          <option value="">Todas</option>
-          {(estacoes || []).map((e) => <option key={e.estacao_id} value={e.estacao_id}>{e.bairro}</option>)}
-        </Seletor>
+        <Seletor rotulo="Estação" value={filtros.estacao_id} onChange={(v) => setFiltros({ ...filtros, estacao_id: v })} className="min-w-48"
+          opcoes={[{ valor: "", rotulo: "Todas" }, ...(estacoes || []).map((e) => ({ valor: e.estacao_id, rotulo: e.bairro }))]} />
         <label className="grid gap-1 text-sm text-texto-2">
           De
           <input type="date" className={INPUT_DATA} value={filtros.inicio} min={periodo?.inicio} max={periodo?.fim} onChange={mudar("inicio")} />

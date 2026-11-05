@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { CaretDown, ChatText } from "@phosphor-icons/react";
 import { AvisoOffline, Cabecalho, Carregando, Erro, Pagina, SeloRisco, classeRisco, horaCurta, useDados } from "../comum.jsx";
+import { Selecao } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 
 export default function Alertas() {
@@ -14,18 +15,14 @@ export default function Alertas() {
       <AvisoOffline offline={offline} guardadoEm={guardadoEm} />
       <Cabecalho titulo="Alertas emitidos">Os mesmos avisos que chegam por SMS aos moradores cadastrados.</Cabecalho>
 
-      <label className="relative inline-flex max-w-xs items-center justify-self-start">
-        <span className="sr">Filtrar por bairro</span>
-        <select
-          value={filtro}
-          onChange={(e) => setFiltro(e.target.value)}
-          className="min-h-12 w-full appearance-none rounded-full border border-borda-forte bg-superficie py-2 pr-11 pl-5 font-semibold text-texto"
-        >
-          <option value="">Todos os bairros</option>
-          {(estacoes || []).map((e) => <option key={e.estacao_id} value={e.estacao_id}>{e.bairro}</option>)}
-        </select>
-        <CaretDown size={18} weight="bold" className="pointer-events-none absolute right-4 text-texto-2" aria-hidden="true" />
-      </label>
+      <Selecao
+        variante="pilula"
+        aria-label="Filtrar por bairro"
+        className="justify-self-start"
+        value={filtro}
+        onChange={setFiltro}
+        opcoes={[{ valor: "", rotulo: "Todos os bairros" }, ...(estacoes || []).map((e) => ({ valor: e.estacao_id, rotulo: e.bairro }))]}
+      />
 
       {carregando && !dados && <Carregando texto="Carregando os alertas" />}
       {!dados && <Erro erro={erro} />}

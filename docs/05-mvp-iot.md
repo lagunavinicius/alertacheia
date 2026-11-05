@@ -12,7 +12,7 @@ alerta costuma chegar à noite, no meio do temporal. Há tema claro e alto contr
 | Camada | Biblioteca | Para quê |
 |---|---|---|
 | Estilo | Tailwind CSS v4 (tokens em CSS) | cores, tipografia e espaçamento num só lugar, com tema claro, escuro e alto contraste |
-| Componentes | padrão shadcn/ui (Radix + `cva` + `cn`) | botão, cartão, abas e painel lateral acessíveis (foco preso, teclado, ARIA) |
+| Componentes | padrão shadcn/ui (Radix + `cva` + `cn`) | botão, cartão, abas, seletor (com o risco de cada bairro na lista) e painel lateral acessíveis (foco preso, teclado, ARIA) |
 | Mapa | MapLibre GL + react-map-gl, tiles do OpenFreeMap | mapa real de São Paulo, sem chave de API, com os córregos realçados |
 | Movimento | Motion | a água sobe com física de mola; desligado com `prefers-reduced-motion` |
 | Gráficos | Recharts | nível, chuva e chance de transbordo |
