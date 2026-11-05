@@ -119,12 +119,10 @@ jobs:
         if: always()
         run: docker logs ac || true
       - name: Trivy (vulnerabilidades da imagem)
-        uses: aquasecurity/trivy-action@0.28.0
-        with:
-          image-ref: ${{ env.IMAGEM_LOCAL }}
-          severity: CRITICAL
-          ignore-unfixed: true
-          exit-code: "1"
+        # imagem oficial com versão fixa: a ferramenta de segurança também é dependência
+        run: |
+          docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy:0.58.1 \
+            image --severity CRITICAL --ignore-unfixed --exit-code 1 --no-progress "$IMAGEM_LOCAL"
       - name: Salvar imagem para o deploy
         run: docker save "$IMAGEM_LOCAL" | gzip > imagem.tar.gz
       - uses: actions/upload-artifact@v4
