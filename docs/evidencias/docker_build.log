@@ -1,0 +1,361 @@
+﻿docker : #0 building with "desktop-linux" instance using docker driver
+No linha:1 caractere:302
++ ... ext' } catch {} } }; docker build -t alertacheia:local . 2>&1 | Out-F ...
++                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (#0 building wit...g docker driver:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.63kB 0.0s done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:20-alpine
+#2 ...
+
+#3 [auth] library/python:pull token for registry-1.docker.io
+#3 DONE 0.0s
+
+#4 [auth] library/node:pull token for registry-1.docker.io
+#4 DONE 0.0s
+
+#5 [internal] load metadata for docker.io/library/python:3.11-slim
+#5 DONE 1.1s
+
+#2 [internal] load metadata for docker.io/library/node:20-alpine
+#2 DONE 1.8s
+
+#6 [internal] load .dockerignore
+#6 transferring context: 239B done
+#6 DONE 0.0s
+
+#7 [app  1/12] FROM 
+docker.io/library/python:3.11-slim@sha256:db20d8506e2f15b6db39b40b6015ca46bae855dec6dd326d462cfe79ae972893
+#7 resolve docker.io/library/python:3.11-slim@sha256:db20d8506e2f15b6db39b40b6015ca46bae855dec6dd326d462cfe79ae972893 
+0.0s done
+#7 DONE 0.0s
+
+#8 [app  2/12] WORKDIR /app
+#8 CACHED
+
+#9 [internal] load build context
+#9 transferring context: 261.55kB 0.0s done
+#9 DONE 0.1s
+
+#10 [frontend 1/6] FROM 
+docker.io/library/node:20-alpine@sha256:fb4cd12c85ee03686f6af5362a0b0d56d50c58a04632e6c0fb8363f609372293
+#10 resolve docker.io/library/node:20-alpine@sha256:fb4cd12c85ee03686f6af5362a0b0d56d50c58a04632e6c0fb8363f609372293 
+0.0s done
+#10 ...
+
+#11 [app  3/12] COPY requirements.txt ./
+#11 DONE 0.1s
+
+#10 [frontend 1/6] FROM 
+docker.io/library/node:20-alpine@sha256:fb4cd12c85ee03686f6af5362a0b0d56d50c58a04632e6c0fb8363f609372293
+#10 sha256:fff4e2c1b189bf87d63ad8bd07f7f4eb288d6f2b6a07a8bb44c60e8c075d2096 0B / 445B 0.2s
+#10 sha256:fff4e2c1b189bf87d63ad8bd07f7f4eb288d6f2b6a07a8bb44c60e8c075d2096 445B / 445B 0.2s done
+#10 sha256:b2cbbfe903b0821005780971ddc5892edcc4ce74c5a48d82e1d2b382edac3122 0B / 1.26MB 0.3s
+#10 sha256:4feea04c154301db6f4a496efa397b3db96603b1c009c797cfdde77bea8b3287 0B / 43.23MB 0.2s
+#10 sha256:6a0ac1617861a677b045b7ff88545213ec31c0ff08763195a70a4a5adda577bb 0B / 3.86MB 0.2s
+#10 sha256:b2cbbfe903b0821005780971ddc5892edcc4ce74c5a48d82e1d2b382edac3122 1.26MB / 1.26MB 0.4s done
+#10 sha256:4feea04c154301db6f4a496efa397b3db96603b1c009c797cfdde77bea8b3287 3.15MB / 43.23MB 0.6s
+#10 sha256:6a0ac1617861a677b045b7ff88545213ec31c0ff08763195a70a4a5adda577bb 3.86MB / 3.86MB 0.7s done
+#10 sha256:4feea04c154301db6f4a496efa397b3db96603b1c009c797cfdde77bea8b3287 6.29MB / 43.23MB 0.8s
+#10 extracting sha256:6a0ac1617861a677b045b7ff88545213ec31c0ff08763195a70a4a5adda577bb 0.1s done
+#10 sha256:4feea04c154301db6f4a496efa397b3db96603b1c009c797cfdde77bea8b3287 10.49MB / 43.23MB 1.1s
+#10 sha256:4feea04c154301db6f4a496efa397b3db96603b1c009c797cfdde77bea8b3287 13.63MB / 43.23MB 1.2s
+#10 sha256:4feea04c154301db6f4a496efa397b3db96603b1c009c797cfdde77bea8b3287 17.83MB / 43.23MB 1.5s
+#10 sha256:4feea04c154301db6f4a496efa397b3db96603b1c009c797cfdde77bea8b3287 20.97MB / 43.23MB 1.7s
+#10 sha256:4feea04c154301db6f4a496efa397b3db96603b1c009c797cfdde77bea8b3287 24.12MB / 43.23MB 1.8s
+#10 sha256:4feea04c154301db6f4a496efa397b3db96603b1c009c797cfdde77bea8b3287 28.31MB / 43.23MB 2.1s
+#10 sha256:4feea04c154301db6f4a496efa397b3db96603b1c009c797cfdde77bea8b3287 31.46MB / 43.23MB 2.3s
+#10 sha256:4feea04c154301db6f4a496efa397b3db96603b1c009c797cfdde77bea8b3287 38.80MB / 43.23MB 2.7s
+#10 sha256:4feea04c154301db6f4a496efa397b3db96603b1c009c797cfdde77bea8b3287 43.23MB / 43.23MB 3.0s done
+#10 extracting sha256:4feea04c154301db6f4a496efa397b3db96603b1c009c797cfdde77bea8b3287
+#10 extracting sha256:4feea04c154301db6f4a496efa397b3db96603b1c009c797cfdde77bea8b3287 1.1s done
+#10 DONE 4.2s
+
+#12 [app  4/12] RUN pip install --upgrade pip && pip install -r requirements.txt
+#12 1.262 Requirement already satisfied: pip in /usr/local/lib/python3.11/site-packages (24.0)
+#12 1.351 Collecting pip
+#12 1.410   Downloading pip-26.3-py3-none-any.whl.metadata (4.6 kB)
+#12 1.425 Downloading pip-26.3-py3-none-any.whl (2.0 MB)
+#12 1.529    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.0/2.0 MB 19.2 MB/s eta 0:00:00
+#12 1.559 Installing collected packages: pip
+#12 1.559   Attempting uninstall: pip
+#12 1.561     Found existing installation: pip 24.0
+#12 1.599     Uninstalling pip-24.0:
+#12 1.858       Successfully uninstalled pip-24.0
+#12 2.521 Successfully installed pip-26.3
+#12 2.521 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the 
+system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+#12 3.330 Collecting numpy>=2.0 (from -r requirements.txt (line 5))
+#12 3.389   Downloading numpy-2.4.6-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (6.6 kB)
+#12 3.464 Collecting pandas>=2.2 (from -r requirements.txt (line 6))
+#12 3.477   Downloading pandas-3.1.1-cp311-cp311-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl.metadata (16 kB)
+#12 3.536 Collecting pyarrow>=16.0 (from -r requirements.txt (line 7))
+#12 3.555   Downloading pyarrow-26.0.1-cp311-cp311-manylinux_2_28_x86_64.whl.metadata (3.0 kB)
+#12 3.624 Collecting scikit-learn>=1.5 (from -r requirements.txt (line 10))
+#12 3.637   Downloading scikit_learn-1.9.1-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (9.3 
+kB)
+#12 3.655 Collecting joblib>=1.4 (from -r requirements.txt (line 11))
+#12 3.667   Downloading joblib-1.6.0-py3-none-any.whl.metadata (6.5 kB)
+#12 3.694 Collecting anthropic>=0.40 (from -r requirements.txt (line 14))
+#12 3.705   Downloading anthropic-2.5.0-py3-none-any.whl.metadata (3.6 kB)
+#12 3.738 Collecting fastapi>=0.110 (from -r requirements.txt (line 17))
+#12 3.750   Downloading fastapi-0.162.0-py3-none-any.whl.metadata (26 kB)
+#12 3.774 Collecting uvicorn>=0.29 (from uvicorn[standard]>=0.29->-r requirements.txt (line 18))
+#12 3.785   Downloading uvicorn-0.54.0-py3-none-any.whl.metadata (6.6 kB)
+#12 3.801 Collecting pyjwt>=2.8 (from -r requirements.txt (line 19))
+#12 3.813   Downloading pyjwt-2.15.1-py3-none-any.whl.metadata (3.5 kB)
+#12 3.932 Collecting cryptography>=42.0 (from -r requirements.txt (line 20))
+#12 3.951   Downloading cryptography-50.0.2-cp311-abi3-manylinux_2_34_x86_64.whl.metadata (4.4 kB)
+#12 3.967 Collecting python-dateutil>=2.9.0 (from pandas>=2.2->-r requirements.txt (line 6))
+#12 3.980   Downloading python_dateutil-4.0.0-py3-none-any.whl.metadata (7.3 kB)
+#12 ...
+
+#10 [frontend 1/6] FROM 
+docker.io/library/node:20-alpine@sha256:fb4cd12c85ee03686f6af5362a0b0d56d50c58a04632e6c0fb8363f609372293
+#10 extracting sha256:b2cbbfe903b0821005780971ddc5892edcc4ce74c5a48d82e1d2b382edac3122 0.0s done
+#10 extracting sha256:fff4e2c1b189bf87d63ad8bd07f7f4eb288d6f2b6a07a8bb44c60e8c075d2096 0.0s done
+#10 DONE 4.2s
+
+#12 [app  4/12] RUN pip install --upgrade pip && pip install -r requirements.txt
+#12 4.076 Collecting scipy>=1.10.0 (from scikit-learn>=1.5->-r requirements.txt (line 10))
+#12 4.087   Downloading scipy-1.17.1-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (62 kB)
+#12 4.125 Collecting narwhals>=2.0.1 (from scikit-learn>=1.5->-r requirements.txt (line 10))
+#12 4.138   Downloading narwhals-2.28.0-py3-none-any.whl.metadata (15 kB)
+#12 4.153 Collecting threadpoolctl>=3.5.0 (from scikit-learn>=1.5->-r requirements.txt (line 10))
+#12 4.171   Downloading threadpoolctl-3.7.0-py3-none-any.whl.metadata (24 kB)
+#12 4.186 Collecting cloudpickle>=3.0 (from joblib>=1.4->-r requirements.txt (line 11))
+#12 4.199   Downloading cloudpickle-3.1.2-py3-none-any.whl.metadata (7.1 kB)
+#12 4.219 Collecting anyio<5,>=4.1.0 (from anthropic>=0.40->-r requirements.txt (line 14))
+#12 4.230   Downloading anyio-4.16.0-py3-none-any.whl.metadata (4.7 kB)
+#12 4.245 Collecting docstring-parser<1,>=0.15 (from anthropic>=0.40->-r requirements.txt (line 14))
+#12 4.256   Downloading docstring_parser-0.18.0-py3-none-any.whl.metadata (3.5 kB)
+#12 4.280 Collecting httpx2<3,>=2.0.0 (from anthropic>=0.40->-r requirements.txt (line 14))
+#12 ...
+
+#13 [frontend 2/6] WORKDIR /app/frontend
+#13 DONE 0.2s
+
+#14 [frontend 3/6] COPY frontend/package.json frontend/package-lock.json ./
+#14 DONE 0.0s
+
+#12 [app  4/12] RUN pip install --upgrade pip && pip install -r requirements.txt
+#12 4.294   Downloading httpx2-2.16.0-py3-none-any.whl.metadata (10 kB)
+#12 4.357 Collecting jiter<1,>=0.4.0 (from anthropic>=0.40->-r requirements.txt (line 14))
+#12 4.368   Downloading jiter-0.18.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (5.2 kB)
+#12 4.386 Collecting opentelemetry-api<2,>=1.1.0 (from anthropic>=0.40->-r requirements.txt (line 14))
+#12 4.405   Downloading opentelemetry_api-1.45.2-py3-none-any.whl.metadata (1.4 kB)
+#12 4.469 Collecting pydantic<3,>=1.10.0 (from anthropic>=0.40->-r requirements.txt (line 14))
+#12 4.481   Downloading pydantic-2.14.2-py3-none-any.whl.metadata (137 kB)
+#12 4.506 Collecting sniffio<2,>=1 (from anthropic>=0.40->-r requirements.txt (line 14))
+#12 4.516   Downloading sniffio-1.3.1-py3-none-any.whl.metadata (3.9 kB)
+#12 4.533 Collecting typing-extensions<5,>=4.14 (from anthropic>=0.40->-r requirements.txt (line 14))
+#12 4.545   Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+#12 4.561 Collecting idna>=2.8 (from anyio<5,>=4.1.0->anthropic>=0.40->-r requirements.txt (line 14))
+#12 4.573   Downloading idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+#12 4.590 Collecting httpcore2==2.16.0 (from httpx2<3,>=2.0.0->anthropic>=0.40->-r requirements.txt (line 14))
+#12 4.602   Downloading httpcore2-2.16.0-py3-none-any.whl.metadata (27 kB)
+#12 4.620 Collecting truststore>=0.10 (from httpx2<3,>=2.0.0->anthropic>=0.40->-r requirements.txt (line 14))
+#12 4.632   Downloading truststore-0.10.5-py3-none-any.whl.metadata (4.5 kB)
+#12 4.647 Collecting h11>=0.16 (from httpcore2==2.16.0->httpx2<3,>=2.0.0->anthropic>=0.40->-r requirements.txt (line 
+14))
+#12 4.659   Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+#12 4.675 Collecting annotated-types>=0.6.0 (from pydantic<3,>=1.10.0->anthropic>=0.40->-r requirements.txt (line 14))
+#12 4.686   Downloading annotated_types-0.8.0-py3-none-any.whl.metadata (15 kB)
+#12 5.136 Collecting pydantic-core==2.50.2 (from pydantic<3,>=1.10.0->anthropic>=0.40->-r requirements.txt (line 14))
+#12 5.148   Downloading pydantic_core-2.50.2-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (6.5 
+kB)
+#12 5.162 Collecting typing-inspection>=0.4.4 (from pydantic<3,>=1.10.0->anthropic>=0.40->-r requirements.txt (line 
+14))
+#12 5.174   Downloading typing_inspection-0.4.5-py3-none-any.whl.metadata (2.6 kB)
+#12 5.195 Collecting starlette>=0.46.0 (from fastapi>=0.110->-r requirements.txt (line 17))
+#12 5.207   Downloading starlette-1.10.0-py3-none-any.whl.metadata (6.6 kB)
+#12 5.225 Collecting annotated-doc>=0.0.2 (from fastapi>=0.110->-r requirements.txt (line 17))
+#12 5.237   Downloading annotated_doc-0.0.5-py3-none-any.whl.metadata (6.5 kB)
+#12 5.254 Collecting click>=7.0 (from uvicorn>=0.29->uvicorn[standard]>=0.29->-r requirements.txt (line 18))
+#12 5.267   Downloading click-8.5.0-py3-none-any.whl.metadata (2.6 kB)
+#12 5.343 Collecting cffi>=2.0.0 (from cryptography>=42.0->-r requirements.txt (line 20))
+#12 5.365   Downloading cffi-2.1.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.5 kB)
+#12 5.385 Collecting pycparser (from cffi>=2.0.0->cryptography>=42.0->-r requirements.txt (line 20))
+#12 5.412   Downloading pycparser-3.12-py3-none-any.whl.metadata (9.7 kB)
+#12 5.433 Collecting tzdata (from python-dateutil>=2.9.0->pandas>=2.2->-r requirements.txt (line 6))
+#12 5.445   Downloading tzdata-2026.6-py2.py3-none-any.whl.metadata (1.4 kB)
+#12 5.481 Collecting httptools>=0.8.0 (from uvicorn[standard]>=0.29->-r requirements.txt (line 18))
+#12 5.493   Downloading 
+httptools-0.9.0-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (3.5 kB)
+#12 5.513 Collecting python-dotenv>=0.13 (from uvicorn[standard]>=0.29->-r requirements.txt (line 18))
+#12 5.525   Downloading python_dotenv-1.2.4-py3-none-any.whl.metadata (29 kB)
+#12 5.560 Collecting pyyaml>=5.1 (from uvicorn[standard]>=0.29->-r requirements.txt (line 18))
+#12 5.572   Downloading 
+pyyaml-6.0.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.4 kB)
+#12 5.637 Collecting uvloop>=0.15.1 (from uvicorn[standard]>=0.29->-r requirements.txt (line 18))
+#12 5.649   Downloading 
+uvloop-0.23.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (5.1 kB)
+#12 5.763 Collecting watchfiles>=0.20 (from uvicorn[standard]>=0.29->-r requirements.txt (line 18))
+#12 5.775   Downloading watchfiles-1.3.0-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.9 kB)
+#12 5.887 Collecting websockets>=13.0 (from uvicorn[standard]>=0.29->-r requirements.txt (line 18))
+#12 5.899   Downloading 
+websockets-17.4-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (6.3 kB)
+#12 5.916 Downloading numpy-2.4.6-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (16.9 MB)
+#12 6.584    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 16.9/16.9 MB 26.0 MB/s  0:00:00
+#12 6.602 Downloading pandas-3.1.1-cp311-cp311-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (12.4 MB)
+#12 7.166    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 12.4/12.4 MB 22.0 MB/s  0:00:00
+#12 7.182 Downloading pyarrow-26.0.1-cp311-cp311-manylinux_2_28_x86_64.whl (55.0 MB)
+#12 ...
+
+#15 [frontend 4/6] RUN npm ci --no-audit --no-fund
+#15 2.887 npm warn deprecated recharts@2.15.4: 1.x and 2.x branches are no longer active. Bump to Recharts v3 to 
+receive latest features and bugfixes. See https://github.com/recharts/recharts/wiki/3.0-migration-guide
+#15 3.085 
+#15 3.085 added 105 packages in 3s
+#15 3.086 npm notice
+#15 3.086 npm notice New major version of npm available! 10.8.2 -> 12.2.2
+#15 3.086 npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.2
+#15 3.086 npm notice To update run: npm install -g npm@12.2.2
+#15 3.086 npm notice
+#15 DONE 3.1s
+
+#16 [frontend 5/6] COPY frontend/ ./
+#16 DONE 0.4s
+
+#12 [app  4/12] RUN pip install --upgrade pip && pip install -r requirements.txt
+#12 9.495    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 55.0/55.0 MB 23.8 MB/s  0:00:02
+#12 9.512 Downloading scikit_learn-1.9.1-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (9.3 MB)
+#12 9.851    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 9.3/9.3 MB 28.3 MB/s  0:00:00
+#12 9.863 Downloading joblib-1.6.0-py3-none-any.whl (306 kB)
+#12 9.887 Downloading anthropic-2.5.0-py3-none-any.whl (2.4 MB)
+#12 9.993    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.4/2.4 MB 24.1 MB/s  0:00:00
+#12 10.01 Downloading anyio-4.16.0-py3-none-any.whl (134 kB)
+#12 10.02 Downloading docstring_parser-0.18.0-py3-none-any.whl (22 kB)
+#12 10.04 Downloading httpx2-2.16.0-py3-none-any.whl (97 kB)
+#12 10.05 Downloading httpcore2-2.16.0-py3-none-any.whl (85 kB)
+#12 10.07 Downloading jiter-0.18.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (337 kB)
+#12 10.10 Downloading opentelemetry_api-1.45.2-py3-none-any.whl (60 kB)
+#12 10.11 Downloading pydantic-2.14.2-py3-none-any.whl (490 kB)
+#12 10.16 Downloading pydantic_core-2.50.2-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (2.2 MB)
+#12 10.26    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.2/2.2 MB 22.8 MB/s  0:00:00
+#12 10.28 Downloading sniffio-1.3.1-py3-none-any.whl (10 kB)
+#12 10.29 Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+#12 10.30 Downloading fastapi-0.162.0-py3-none-any.whl (148 kB)
+#12 10.32 Downloading uvicorn-0.54.0-py3-none-any.whl (87 kB)
+#12 10.33 Downloading pyjwt-2.15.1-py3-none-any.whl (33 kB)
+#12 10.35 Downloading cryptography-50.0.2-cp311-abi3-manylinux_2_34_x86_64.whl (4.8 MB)
+#12 10.51    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.8/4.8 MB 30.8 MB/s  0:00:00
+#12 10.53 Downloading annotated_doc-0.0.5-py3-none-any.whl (5.3 kB)
+#12 10.54 Downloading annotated_types-0.8.0-py3-none-any.whl (13 kB)
+#12 10.55 Downloading cffi-2.1.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (217 kB)
+#12 10.57 Downloading click-8.5.0-py3-none-any.whl (125 kB)
+#12 10.59 Downloading cloudpickle-3.1.2-py3-none-any.whl (22 kB)
+#12 10.60 Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+#12 10.62 Downloading idna-3.20-py3-none-any.whl (69 kB)
+#12 10.64 Downloading narwhals-2.28.0-py3-none-any.whl (490 kB)
+#12 10.66 Downloading python_dateutil-4.0.0-py3-none-any.whl (92 kB)
+#12 10.68 Downloading scipy-1.17.1-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (35.3 MB)
+#12 ...
+
+#17 [frontend 6/6] RUN npm run build
+#17 0.376 
+#17 0.376 > alertacheia-frontend@1.0.0 build
+#17 0.376 > vite build
+#17 0.376 
+#17 0.551 vite v5.4.21 building for production...
+#17 0.593 transforming...
+#17 3.268 ✓ 638 modules transformed.
+#17 3.631 rendering chunks...
+#17 3.643 computing gzip size...
+#17 3.657 dist/index.html                   0.66 kB │ gzip:   0.38 kB
+#17 3.657 dist/assets/index-BRe-ve7A.css   14.62 kB │ gzip:   4.01 kB
+#17 3.657 dist/assets/index-DaYkCLeB.js   618.28 kB │ gzip: 176.90 kB
+#17 3.658 ✓ built in 3.08s
+#17 DONE 3.8s
+
+#12 [app  4/12] RUN pip install --upgrade pip && pip install -r requirements.txt
+#12 12.16    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 35.3/35.3 MB 24.1 MB/s  0:00:01
+#12 12.17 Downloading starlette-1.10.0-py3-none-any.whl (80 kB)
+#12 12.18 Downloading threadpoolctl-3.7.0-py3-none-any.whl (26 kB)
+#12 12.20 Downloading truststore-0.10.5-py3-none-any.whl (19 kB)
+#12 12.21 Downloading typing_inspection-0.4.5-py3-none-any.whl (14 kB)
+#12 12.22 Downloading httptools-0.9.0-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl 
+(499 kB)
+#12 12.27 Downloading python_dotenv-1.2.4-py3-none-any.whl (23 kB)
+#12 12.28 Downloading pyyaml-6.0.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl 
+(806 kB)
+#12 12.33    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 806.6/806.6 kB 21.5 MB/s  0:00:00
+#12 12.34 Downloading uvloop-0.23.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl 
+(4.0 MB)
+#12 12.54    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.0/4.0 MB 20.2 MB/s  0:00:00
+#12 12.55 Downloading watchfiles-1.3.0-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (458 kB)
+#12 12.60 Downloading websockets-17.4-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl 
+(226 kB)
+#12 12.62 Downloading pycparser-3.12-py3-none-any.whl (62 kB)
+#12 12.65 Downloading tzdata-2026.6-py2.py3-none-any.whl (348 kB)
+#12 12.89 Installing collected packages: websockets, uvloop, tzdata, typing-extensions, truststore, threadpoolctl, 
+sniffio, pyyaml, python-dotenv, pyjwt, pycparser, pyarrow, numpy, narwhals, jiter, idna, httptools, h11, 
+docstring-parser, cloudpickle, click, annotated-types, annotated-doc, uvicorn, typing-inspection, scipy, 
+python-dateutil, pydantic-core, opentelemetry-api, joblib, httpcore2, cffi, anyio, watchfiles, starlette, 
+scikit-learn, pydantic, pandas, httpx2, cryptography, fastapi, anthropic
+#12 24.75 
+#12 24.75 Successfully installed annotated-doc-0.0.5 annotated-types-0.8.0 anthropic-2.5.0 anyio-4.16.0 cffi-2.1.1 
+click-8.5.0 cloudpickle-3.1.2 cryptography-50.0.2 docstring-parser-0.18.0 fastapi-0.162.0 h11-0.16.0 httpcore2-2.16.0 
+httptools-0.9.0 httpx2-2.16.0 idna-3.20 jiter-0.18.0 joblib-1.6.0 narwhals-2.28.0 numpy-2.4.6 opentelemetry-api-1.45.2 
+pandas-3.1.1 pyarrow-26.0.1 pycparser-3.12 pydantic-2.14.2 pydantic-core-2.50.2 pyjwt-2.15.1 python-dateutil-4.0.0 
+python-dotenv-1.2.4 pyyaml-6.0.3 scikit-learn-1.9.1 scipy-1.17.1 sniffio-1.3.1 starlette-1.10.0 threadpoolctl-3.7.0 
+truststore-0.10.5 typing-extensions-4.16.0 typing-inspection-0.4.5 tzdata-2026.6 uvicorn-0.54.0 uvloop-0.23.0 
+watchfiles-1.3.0 websockets-17.4
+#12 24.75 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the 
+system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment 
+instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want 
+to suppress this warning.
+#12 DONE 25.5s
+
+#18 [app  5/12] COPY alertacheia/ alertacheia/
+#18 DONE 0.2s
+
+#19 [app  6/12] COPY dados/ dados/
+#19 DONE 0.1s
+
+#20 [app  7/12] COPY ia/prompts.py ia/alerta_generativo.py ia/modelo.py ia/treinar.py ia/__init__.py ia/
+#20 DONE 0.1s
+
+#21 [app  8/12] COPY api/ api/
+#21 DONE 0.1s
+
+#22 [app  9/12] COPY iot/ iot/
+#22 DONE 0.1s
+
+#23 [app 10/12] COPY run_pipeline.py ./
+#23 DONE 0.1s
+
+#24 [app 11/12] COPY --from=frontend /app/frontend/dist frontend/dist
+#24 DONE 0.1s
+
+#25 [app 12/12] RUN python run_pipeline.py     && useradd --create-home --uid 10001 alerta     && mkdir -p /app/data   
+  && chown -R alerta:alerta /app/data /app/datalake /app/docs
+#25 1.662 [1/4] gerando histórico simulado... {'registros_bronze': 57466, 'estacoes': 5, 'dias': 120}
+#25 1.662 [2/4] processando o Data Lake...
+#25 2.623       bronze 57466 · quarentena 314 · duplicadas 330 · silver 57600 · eventos 40
+#25 2.623 [3/4] treinando e avaliando o modelo de risco...
+#25 4.837       ROC AUC 0.9684 · antecedência média: modelo 73.9 min x régua 41.8 min (14 enchentes no teste)
+#25 4.837 [4/4] gerando exemplo do alerta da IA generativa...
+#25 4.870       gerado por: deterministico -> docs/evidencias/exemplo_alerta_ia.json
+#25 4.870 pronto em 3.6s
+#25 DONE 5.2s
+
+#26 exporting to image
+#26 exporting layers
+#26 exporting layers 13.0s done
+#26 exporting manifest sha256:e3cb7bfb1014d947b76b0d461e3cca4717e90bee7b398d1d3cfb2f548813e1e7 0.0s done
+#26 exporting config sha256:dcdad0749d1917006210ab6d1158a0b96124b535e56893a2daaead0645825853 0.0s done
+#26 exporting attestation manifest sha256:eb3232cdd1b6a10746c578ae613f9b44c8314580ca6ee21e16efd87c5a2efe83 0.0s done
+#26 exporting manifest list sha256:81e9e0de6f8cd406e267f7bc8c7593817c8b5ebd34d12dd744c581f274461c6b 0.0s done
+#26 naming to docker.io/library/alertacheia:local
+#26 naming to docker.io/library/alertacheia:local done
+#26 unpacking to docker.io/library/alertacheia:local
+#26 unpacking to docker.io/library/alertacheia:local 6.0s done
+#26 DONE 19.1s
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/6r385zijfq90c9ixwem1vtdwq

@@ -1,0 +1,35 @@
+{
+  "entrada": {
+    "bairro": "Jardim Pantanal",
+    "corpo_dagua": "Rio Tietê",
+    "risco": "ALERTA",
+    "chance_de_transbordar_2h": "90%",
+    "nivel_atual_em_relacao_ao_limite": "37%",
+    "chuva_ultima_hora_mm": 24.6,
+    "motivos": [
+      "o córrego subiu 19 cm na última hora",
+      "choveu 25 mm na última hora",
+      "acumulado de 26 mm em 3 horas",
+      "o solo está encharcado e não absorve mais água"
+    ],
+    "abrigo": "EMEF Jardim Pantanal",
+    "telefone_defesa_civil": "199",
+    "telefone_bombeiros": "193",
+    "ha_moradores_com_mobilidade_reduzida": true
+  },
+  "saida": {
+    "titulo": "ALERTA de enchente em Jardim Pantanal",
+    "sms": "DEFESA CIVIL: risco alto de enchente em Jardim Pantanal nas próximas 2h. Saia dos cômodos baixos, leve documentos. Abrigo: EMEF Jardim Pantanal. 199",
+    "mensagem": "ALERTA de enchente em Jardim Pantanal. O sistema percebeu que o córrego subiu 19 cm na última hora. Tire pessoas e animais dos cômodos baixos. O abrigo mais próximo é EMEF Jardim Pantanal.",
+    "acoes": [
+      "Tire pessoas e animais dos cômodos baixos",
+      "Quem tem dificuldade para andar: peça ajuda a um vizinho agora ou ligue 199",
+      "Separe documentos, remédios e carregador",
+      "Se a água subir, vá para EMEF Jardim Pantanal",
+      "Fique longe da beira do córrego"
+    ],
+    "texto_audio": "ALERTA de enchente em Jardim Pantanal. O sistema percebeu que o córrego subiu 19 centímetros na última hora. Tire pessoas e animais dos cômodos baixos. O abrigo mais próximo é EMEF Jardim Pantanal.",
+    "gerado_por": "deterministico",
+    "tempo_geracao_ms": 0
+  }
+}

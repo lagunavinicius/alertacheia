@@ -1,0 +1,32 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+relatorio-*.xml
+relatorio-*.json
+
+# Segredos: nunca versionar
+.env
+data/.chave_dados
+
+# Gerados por `python run_pipeline.py` (reconstruíveis a qualquer momento)
+datalake/
+ia/artefatos/
+data/
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+
+# Pacote de entrega
+entrega/
+*.zip
+docs/_entregaveis.html
+
+# Enunciado da FIAP (material do curso, não redistribuir)
+4ESOA*.pdf
+.claude/

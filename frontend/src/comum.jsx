@@ -1,0 +1,85 @@
+import { useEffect, useRef, useState } from "react";
+import { obter } from "./api.js";
+
+export const RISCO = {
+  NORMAL: { rotulo: "Normal", frase: "Sem risco de enchente agora", classe: "normal" },
+  ATENCAO: { rotulo: "Atenção", frase: "Chuva forte: fique atento", classe: "atencao" },
+  ALERTA: { rotulo: "Alerta", frase: "Risco alto de enchente nas próximas 2 horas", classe: "alerta" },
+  EMERGENCIA: { rotulo: "Emergência", frase: "O córrego transbordou: saia agora", classe: "emergencia" },
+};
+
+export function riscoDe(estacao) {
+  return estacao?.ultima_leitura?.risco || "NORMAL";
+}
+
+/** Busca periódica: o painel e o "meu bairro" se atualizam sozinhos. */
+export function useDados(caminho, { intervalo = 0, autenticado = false } = {}) {
+  const [estado, setEstado] = useState({ dados: null, erro: null, offline: false, carregando: true });
+  const vivo = useRef(true);
+
+  useEffect(() => {
+    vivo.current = true;
+    if (!caminho) return undefined;
+    const buscar = () =>
+      obter(caminho, { autenticado })
+        .then((r) => vivo.current && setEstado({ ...r, erro: null, carregando: false }))
+        .catch((erro) => vivo.current && setEstado((s) => ({ ...s, erro, carregando: false })));
+    buscar();
+    const id = intervalo ? setInterval(buscar, intervalo) : null;
+    return () => {
+      vivo.current = false;
+      if (id) clearInterval(id);
+    };
+  }, [caminho, intervalo, autenticado]);
+
+  return estado;
+}
+
+export function SeloRisco({ risco, grande = false }) {
+  const r = RISCO[risco] || RISCO.NORMAL;
+  return (
+    <span className={`selo selo-${r.classe} ${grande ? "selo-grande" : ""}`}>
+      <span className="selo-ponto" aria-hidden="true" />
+      {r.rotulo}
+    </span>
+  );
+}
+
+export function BarraNivel({ nivel, alerta, transbordo }) {
+  const max = transbordo * 1.25;
+  const pct = Math.min(100, (nivel / max) * 100);
+  const pAlerta = (alerta / max) * 100;
+  const pTransb = (transbordo / max) * 100;
+  const classe = nivel >= transbordo ? "emergencia" : nivel >= alerta ? "atencao" : "normal";
+  return (
+    <div className="barra-nivel" role="img" aria-label={`Nível ${Math.round(nivel)} cm de ${transbordo} cm do limite`}>
+      <div className={`barra-agua barra-${classe}`} style={{ width: `${pct}%` }} />
+      <span className="barra-marca" style={{ left: `${pAlerta}%` }} title="cota de alerta" />
+      <span className="barra-marca barra-marca-forte" style={{ left: `${pTransb}%` }} title="cota de transbordo" />
+    </div>
+  );
+}
+
+export function AvisoOffline({ offline, guardadoEm }) {
+  if (!offline) return null;
+  const hora = new Date(guardadoEm).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+  return (
+    <div className="aviso-offline" role="status">
+      Sem conexão. Mostrando a última informação recebida, das {hora}. Em perigo, ligue <strong>199</strong>.
+    </div>
+  );
+}
+
+export function horaCurta(iso) {
+  if (!iso) return "—";
+  return new Date(iso).toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
+}
+
+export function Carregando({ texto = "Carregando…" }) {
+  return <p className="carregando" role="status">{texto}</p>;
+}
+
+export function Erro({ erro }) {
+  if (!erro) return null;
+  return <p className="erro" role="alert">{erro.message}</p>;
+}

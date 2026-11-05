@@ -1,0 +1,20 @@
+# AlertaCheia — dependências de execução (pipeline, IA e API).
+# Testado em Python 3.11 (imagem Docker / CI) e Python 3.14 (execução local).
+
+# Big Data: camadas silver/gold em Parquet
+numpy>=2.0
+pandas>=2.2
+pyarrow>=16.0
+
+# IA: modelo de risco (Random Forest)
+scikit-learn>=1.5
+joblib>=1.4
+
+# IA generativa (opcional em execução: sem chave, o alerta cai no gerador determinístico)
+anthropic>=0.40
+
+# API e segurança
+fastapi>=0.110
+uvicorn[standard]>=0.29
+pyjwt>=2.8
+cryptography>=42.0

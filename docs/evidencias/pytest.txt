@@ -1,0 +1,67 @@
+﻿============================= test session starts =============================
+platform win32 -- Python 3.14.3, pytest-9.2.0, pluggy-1.7.0 -- C:\Users\lagun\OneDrive\Documents\Github\Faculdade\Trabalhos\GlobalSolution\.venv\Scripts\python.exe
+rootdir: C:\Users\lagun\OneDrive\Documents\Github\Faculdade\Trabalhos\GlobalSolution
+configfile: pyproject.toml
+testpaths: tests
+plugins: anyio-4.16.0, platformdirs-4.14.5, cov-7.1.0
+collecting ... collected 32 items
+
+tests/test_api.py::test_ct10_sensor_precisa_da_chave_da_propria_estacao PASSED [  3%]
+tests/test_api.py::test_ct11_validacao_de_entrada_recusa_dado_ruim PASSED [  6%]
+tests/test_api.py::test_ct12_leitura_duplicada_e_idempotente_e_vai_para_o_bronze PASSED [  9%]
+tests/test_api.py::test_ct13_painel_exige_login_valido PASSED            [ 12%]
+tests/test_api.py::test_ct14_login_bloqueia_forca_bruta PASSED           [ 15%]
+tests/test_api.py::test_ct15_telefone_protegido_e_direito_de_exclusao PASSED [ 18%]
+tests/test_api.py::test_ct16_fluxo_completo_da_chuva_ao_sms PASSED       [ 21%]
+tests/test_api.py::test_ct17_monitoramento PASSED                        [ 25%]
+tests/test_api.py::test_ct18_cabecalhos_de_seguranca PASSED              [ 28%]
+tests/test_dados.py::test_ct01_quarentena_retem_leituras_invalidas PASSED [ 31%]
+tests/test_dados.py::test_ct02_silver_sem_duplicatas PASSED              [ 34%]
+tests/test_dados.py::test_ct03_lacunas_curtas_interpoladas_longas_nao PASSED [ 37%]
+tests/test_dados.py::test_ct04_atributos_identicos_no_treino_e_ao_vivo PASSED [ 40%]
+tests/test_ia.py::test_ct05_modelo_avisa_antes_do_transbordo PASSED      [ 43%]
+tests/test_ia.py::test_ct06_modelo_supera_a_regua_atual PASSED           [ 46%]
+tests/test_ia.py::test_ct07_histerese_evita_pisca_pisca PASSED           [ 50%]
+tests/test_ia.py::test_ct08_sms_cabe_e_tem_o_essencial[EST-01-ATENCAO] PASSED [ 53%]
+tests/test_ia.py::test_ct08_sms_cabe_e_tem_o_essencial[EST-01-ALERTA] PASSED [ 56%]
+tests/test_ia.py::test_ct08_sms_cabe_e_tem_o_essencial[EST-01-EMERGENCIA] PASSED [ 59%]
+tests/test_ia.py::test_ct08_sms_cabe_e_tem_o_essencial[EST-02-ATENCAO] PASSED [ 62%]
+tests/test_ia.py::test_ct08_sms_cabe_e_tem_o_essencial[EST-02-ALERTA] PASSED [ 65%]
+tests/test_ia.py::test_ct08_sms_cabe_e_tem_o_essencial[EST-02-EMERGENCIA] PASSED [ 68%]
+tests/test_ia.py::test_ct08_sms_cabe_e_tem_o_essencial[EST-03-ATENCAO] PASSED [ 71%]
+tests/test_ia.py::test_ct08_sms_cabe_e_tem_o_essencial[EST-03-ALERTA] PASSED [ 75%]
+tests/test_ia.py::test_ct08_sms_cabe_e_tem_o_essencial[EST-03-EMERGENCIA] PASSED [ 78%]
+tests/test_ia.py::test_ct08_sms_cabe_e_tem_o_essencial[EST-04-ATENCAO] PASSED [ 81%]
+tests/test_ia.py::test_ct08_sms_cabe_e_tem_o_essencial[EST-04-ALERTA] PASSED [ 84%]
+tests/test_ia.py::test_ct08_sms_cabe_e_tem_o_essencial[EST-04-EMERGENCIA] PASSED [ 87%]
+tests/test_ia.py::test_ct08_sms_cabe_e_tem_o_essencial[EST-05-ATENCAO] PASSED [ 90%]
+tests/test_ia.py::test_ct08_sms_cabe_e_tem_o_essencial[EST-05-ALERTA] PASSED [ 93%]
+tests/test_ia.py::test_ct08_sms_cabe_e_tem_o_essencial[EST-05-EMERGENCIA] PASSED [ 96%]
+tests/test_ia.py::test_ct09_falha_da_ia_generativa_nao_impede_o_alerta PASSED [100%]
+
+=============================== tests coverage ================================
+_______________ coverage: platform win32, python 3.14.3-final-0 _______________
+
+Name                        Stmts   Miss  Cover
+-----------------------------------------------
+alertacheia\__init__.py         0      0   100%
+alertacheia\config.py          56      7    88%
+alertacheia\features.py        24      0   100%
+alertacheia\hidrologia.py      42      0   100%
+api\__init__.py                 0      0   100%
+api\banco.py                   33      0   100%
+api\esquemas.py                78      4    95%
+api\main.py                   192     33    83%
+api\seguranca.py               91      7    92%
+api\servico.py                211     21    90%
+dados\__init__.py               0      0   100%
+dados\gerador.py               91      2    98%
+dados\pipeline.py             150      6    96%
+ia\__init__.py                  0      0   100%
+ia\alerta_generativo.py        73     25    66%
+ia\modelo.py                   42      3    93%
+ia\prompts.py                   6      1    83%
+ia\treinar.py                 103      2    98%
+-----------------------------------------------
+TOTAL                        1192    111    91%
+============================= 32 passed in 7.72s ==============================

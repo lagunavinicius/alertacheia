@@ -1,0 +1,39 @@
+=== ruff check . ===
+All checks passed!
+
+=== bandit -r alertacheia api dados ia iot -c pyproject.toml ===
+
+[main]	INFO	profile include tests: None
+[main]	INFO	profile exclude tests: B101
+[main]	INFO	cli include tests: None
+[main]	INFO	cli exclude tests: None
+[main]	INFO	using config: pyproject.toml
+[main]	INFO	running on Python 3.14.3
+Run started:2026-11-05 02:29:33.492746+00:00
+
+Test results:
+	No issues identified.
+
+Code scanned:
+	Total lines of code: 1964
+	Total lines skipped (#nosec): 0
+	Total potential issues skipped due to specifically being disabled (e.g., #nosec BXXX): 2
+
+Run metrics:
+	Total issues (by severity):
+		Undefined: 0
+		Low: 0
+		Medium: 0
+		High: 0
+	Total issues (by confidence):
+		Undefined: 0
+		Low: 0
+		Medium: 0
+		High: 0
+Files skipped (0):
+
+=== pip-audit -r requirements.txt ===
+.venv\Scripts\pip-audit : No known vulnerabilities found
+ 
+
+

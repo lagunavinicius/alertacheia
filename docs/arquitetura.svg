@@ -1,0 +1,157 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" font-family="Segoe UI, Arial, sans-serif">
+  <defs>
+    <marker id="s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" fill="#0f1b2d"/>
+    </marker>
+    <style>
+      .area{fill:#fff;stroke:#d9d3c7;stroke-width:1.5}
+      .tag{font-size:12px;font-weight:700;letter-spacing:.08em;fill:#5b6573}
+      .box{fill:#f5f3ee;stroke:#0f1b2d;stroke-width:1.4}
+      .boxd{fill:#0f1b2d}
+      .t{font-size:14px;font-weight:700;fill:#0f1b2d}
+      .tw{font-size:14px;font-weight:700;fill:#f5f3ee}
+      .s{font-size:11.5px;fill:#3b4553}
+      .sw{font-size:11.5px;fill:#cfd6df}
+      .seta{stroke:#0f1b2d;stroke-width:1.6;fill:none;marker-end:url(#s)}
+      .seta2{stroke:#c2410c;stroke-width:2;fill:none;marker-end:url(#s);stroke-dasharray:6 4}
+      .rot{font-size:11px;fill:#c2410c;font-weight:700}
+      .rotc{font-size:11px;fill:#5b6573}
+    </style>
+  </defs>
+  <rect width="1200" height="760" fill="#f5f3ee"/>
+  <text x="40" y="44" font-size="22" font-weight="800" fill="#0f1b2d">AlertaCheia · arquitetura geral</text>
+  <text x="40" y="66" font-size="13" fill="#5b6573">As 4 áreas integradas: o sensor alimenta a IA e o Data Lake; o Data Lake alimenta o modelo e os painéis; o DevOps entrega tudo em um container.</text>
+
+  <!-- Área 3: IoT -->
+  <rect class="area" x="30" y="90" width="250" height="420" rx="14"/>
+  <text class="tag" x="48" y="116">ÁREA 3 · IoT (BORDA)</text>
+  <rect class="box" x="48" y="132" width="214" height="118" rx="10"/>
+  <text class="t" x="62" y="156">Estação TinkerCad</text>
+  <text class="s" x="62" y="176">Arduino Uno · EST-03</text>
+  <text class="s" x="62" y="194">HC-SR04 → nível (cm)</text>
+  <text class="s" x="62" y="210">Potenciômetro → chuva (mm)</text>
+  <text class="s" x="62" y="226">Umidade do solo (%)</text>
+  <text class="s" x="62" y="242">LEDs + sirene local (offline)</text>
+  <rect class="box" x="48" y="268" width="214" height="62" rx="10"/>
+  <text class="t" x="62" y="292">serial_para_api.py</text>
+  <text class="s" x="62" y="312">Monitor Serial (CSV) → HTTP</text>
+  <rect class="box" x="48" y="348" width="214" height="62" rx="10"/>
+  <text class="t" x="62" y="372">Sensores mock</text>
+  <text class="s" x="62" y="392">5 estações · mesma física</text>
+  <rect class="box" x="48" y="428" width="214" height="62" rx="10"/>
+  <text class="t" x="62" y="452">Histórico simulado</text>
+  <text class="s" x="62" y="472">120 dias · 57 mil leituras</text>
+  <path class="seta" d="M155 250V268"/>
+
+  <!-- API -->
+  <rect class="area" x="320" y="90" width="300" height="420" rx="14"/>
+  <text class="tag" x="338" y="116">BACKEND · FastAPI</text>
+  <rect class="boxd" x="338" y="132" width="264" height="104" rx="10"/>
+  <text class="tw" x="354" y="158">POST /api/leituras</text>
+  <text class="sw" x="354" y="178">chave HMAC por estação (X-API-Key)</text>
+  <text class="sw" x="354" y="196">validação de faixa física (Pydantic)</text>
+  <text class="sw" x="354" y="214">idempotente (estação + horário)</text>
+  <rect class="box" x="338" y="252" width="264" height="74" rx="10"/>
+  <text class="t" x="354" y="276">Máquina de estados</text>
+  <text class="s" x="354" y="296">histerese: pré-alerta ≥ 60% · alerta ≥ 80%</text>
+  <text class="s" x="354" y="312">emergência = nível ≥ cota (sensor)</text>
+  <rect class="box" x="338" y="342" width="264" height="74" rx="10"/>
+  <text class="t" x="354" y="366">SQLite operacional</text>
+  <text class="s" x="354" y="386">leituras · alertas · auditoria</text>
+  <text class="s" x="354" y="402">moradores (telefone cifrado Fernet)</text>
+  <rect class="box" x="338" y="432" width="264" height="62" rx="10"/>
+  <text class="t" x="354" y="456">Gateway de SMS (simulado)</text>
+  <text class="s" x="354" y="476">número decifrado só no envio; log mascarado</text>
+  <path class="seta" d="M470 236V252"/><path class="seta" d="M470 326V342"/><path class="seta" d="M470 416V432"/>
+  <path class="seta" d="M262 300H338"/><path class="seta" d="M262 380C300 380 300 200 338 200"/>
+  <text class="rotc" x="268" y="292">HTTP + chave</text>
+
+  <!-- Área 1: IA -->
+  <rect class="area" x="660" y="90" width="250" height="420" rx="14"/>
+  <text class="tag" x="678" y="116">ÁREA 1 · IA E AUTOMAÇÃO</text>
+  <rect class="box" x="678" y="132" width="214" height="104" rx="10"/>
+  <text class="t" x="692" y="156">features.calcular()</text>
+  <text class="s" x="692" y="176">mesma função no treino e ao vivo</text>
+  <text class="s" x="692" y="194">nível/cota, tendência, chuva 1-3-24 h,</text>
+  <text class="s" x="692" y="210">umidade do solo</text>
+  <rect class="boxd" x="678" y="252" width="214" height="104" rx="10"/>
+  <text class="tw" x="692" y="276">Random Forest</text>
+  <text class="sw" x="692" y="296">P(transbordo em 2 h)</text>
+  <text class="sw" x="692" y="314">ROC AUC 0,968 · +32 min</text>
+  <text class="sw" x="692" y="332">de antecedência vs. régua</text>
+  <rect class="box" x="678" y="372" width="214" height="118" rx="10"/>
+  <text class="t" x="692" y="396">Agente generativo</text>
+  <text class="s" x="692" y="416">Claude · saída JSON por esquema</text>
+  <text class="s" x="692" y="432">SMS ≤ 160, ações, texto em áudio</text>
+  <text class="s" x="692" y="448">mobilidade reduzida → prioridade</text>
+  <text class="s" x="692" y="466">fallback determinístico (sem rede)</text>
+  <path class="seta" d="M785 236V252"/><path class="seta" d="M785 356V372"/>
+  <path class="seta" d="M602 180H678"/><path class="seta" d="M678 300H602"/>
+  <path class="seta" d="M678 430C640 430 640 462 602 462"/>
+
+  <!-- Frontend -->
+  <rect class="area" x="950" y="90" width="220" height="420" rx="14"/>
+  <text class="tag" x="968" y="116">MVP · REACT</text>
+  <rect class="box" x="968" y="132" width="184" height="190" rx="10"/>
+  <text class="t" x="982" y="156">Cidadão</text>
+  <text class="s" x="982" y="178">1 Meu bairro (status + IA)</text>
+  <text class="s" x="982" y="196">2 Estações (mapa)</text>
+  <text class="s" x="982" y="214">3 Detalhe (24 h + chance)</text>
+  <text class="s" x="982" y="232">4 Alertas emitidos</text>
+  <text class="s" x="982" y="250">5 Receber alertas (LGPD)</text>
+  <text class="s" x="982" y="276">letra grande · alto contraste</text>
+  <text class="s" x="982" y="294">ouvir alerta · cache offline</text>
+  <rect class="boxd" x="968" y="338" width="184" height="152" rx="10"/>
+  <text class="tw" x="982" y="362">Defesa Civil (JWT)</text>
+  <text class="sw" x="982" y="384">6 Login</text>
+  <text class="sw" x="982" y="402">7 Painel: ao vivo,</text>
+  <text class="sw" x="982" y="418">alertas, filtros,</text>
+  <text class="sw" x="982" y="434">indicadores, modelo,</text>
+  <text class="sw" x="982" y="450">simulação de chuva</text>
+  <path class="seta" d="M968 240C930 240 640 50 470 132" stroke-dasharray="3 3"/>
+  <text class="rotc" x="800" y="84">REST /api (JSON)</text>
+
+  <!-- Área 2: Data Lake -->
+  <rect class="area" x="30" y="540" width="740" height="190" rx="14"/>
+  <text class="tag" x="48" y="566">ÁREA 2 · BIG DATA (DATA LAKE)</text>
+  <rect class="box" x="48" y="582" width="160" height="128" rx="10"/>
+  <text class="t" x="62" y="606">bronze</text>
+  <text class="s" x="62" y="626">JSON Lines como chegou</text>
+  <text class="s" x="62" y="644">leituras/ (histórico)</text>
+  <text class="s" x="62" y="662">tempo_real/ (API)</text>
+  <rect class="box" x="236" y="582" width="160" height="128" rx="10"/>
+  <text class="t" x="250" y="606">silver</text>
+  <text class="s" x="250" y="626">validado · sem duplicata</text>
+  <text class="s" x="250" y="644">grade de 15 min</text>
+  <text class="s" x="250" y="662">lacuna ≤ 30 min interpolada</text>
+  <text class="s" x="250" y="680">+ quarentena com motivo</text>
+  <rect class="boxd" x="424" y="582" width="160" height="128" rx="10"/>
+  <text class="tw" x="438" y="606">gold (estrela)</text>
+  <text class="sw" x="438" y="626">fato_leituras(_hora)</text>
+  <text class="sw" x="438" y="644">fato_eventos · previsões</text>
+  <text class="sw" x="438" y="662">fato_qualidade</text>
+  <text class="sw" x="438" y="680">dim_estacao · calendário</text>
+  <rect class="box" x="612" y="582" width="140" height="128" rx="10"/>
+  <text class="t" x="626" y="606">Consumo</text>
+  <text class="s" x="626" y="626">Power BI (DAX)</text>
+  <text class="s" x="626" y="644">Painel web</text>
+  <text class="s" x="626" y="662">treino do modelo</text>
+  <path class="seta" d="M208 646H236"/><path class="seta" d="M396 646H424"/><path class="seta" d="M584 646H612"/>
+  <path class="seta2" d="M470 510V540C470 560 150 560 128 582"/>
+  <text class="rot" x="300" y="532">toda leitura ao vivo entra no bronze</text>
+  <path class="seta2" d="M504 582C560 540 760 560 785 510"/>
+  <text class="rot" x="640" y="534">gold treina o modelo</text>
+
+  <!-- Área 4: DevOps -->
+  <rect class="area" x="800" y="540" width="370" height="190" rx="14"/>
+  <text class="tag" x="818" y="566">ÁREA 4 · DEVOPS, SEGURANÇA, QUALIDADE</text>
+  <text class="s" x="818" y="592">git push → GitHub Actions</text>
+  <rect class="box" x="818" y="604" width="96" height="44" rx="8"/><text class="s" x="828" y="623">Ruff</text><text class="s" x="828" y="639">Bandit · audit</text>
+  <rect class="box" x="922" y="604" width="76" height="44" rx="8"/><text class="s" x="932" y="623">pytest</text><text class="s" x="932" y="639">32 casos</text>
+  <rect class="box" x="1006" y="604" width="70" height="44" rx="8"/><text class="s" x="1016" y="623">Docker</text><text class="s" x="1016" y="639">+ smoke</text>
+  <rect class="boxd" x="1084" y="604" width="70" height="44" rx="8"/><text class="sw" x="1094" y="623">Trivy</text><text class="sw" x="1094" y="639">→ GHCR</text>
+  <path class="seta" d="M914 626H922"/><path class="seta" d="M998 626H1006"/><path class="seta" d="M1076 626H1084"/>
+  <text class="s" x="818" y="676">Container único: API + modelo + frontend · healthcheck</text>
+  <text class="s" x="818" y="694">/api/saude e /api/metricas (Prometheus) · log JSON</text>
+  <text class="s" x="818" y="712">JWT · PBKDF2 · limite de login · CSP · LGPD</text>
+</svg>

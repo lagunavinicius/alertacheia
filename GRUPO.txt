@@ -1,0 +1,14 @@
+GLOBAL SOLUTION 2026/2 - CITIZENTECH
+Projeto: AlertaCheia - alerta comunitario de enchentes
+
+Grupo: <NOME DO GRUPO>
+
+Integrantes (RM - Nome):
+RM00000 - <Nome completo 1>
+RM00000 - <Nome completo 2>
+RM00000 - <Nome completo 3>
+RM00000 - <Nome completo 4>
+RM00000 - <Nome completo 5>
+
+Link do video pitch (publico): <COLE AQUI O LINK DO YOUTUBE / DRIVE / VIMEO>
+Repositorio (opcional): <COLE AQUI O LINK DO GITHUB>

@@ -1,0 +1,46 @@
+# AlertaCheia com Docker Compose.
+#
+#   docker compose up --build -d           API + painel em http://localhost:8080
+#   docker compose ps                      estado e healthcheck (healthy / unhealthy)
+#   docker compose logs -f api             log JSON de cada requisição
+#   docker compose --profile demo run --rm sensores    5 estações mock publicando
+#   docker compose --profile demo run --rm sensores --tempestade EST-03
+#
+# O banco operacional fica no volume "dados": alertas e cadastros sobrevivem
+# a um restart do container.
+
+services:
+  api:
+    build: .
+    image: alertacheia:local
+    ports:
+      - "8080:8080"
+    env_file:
+      - path: .env
+        required: false
+    volumes:
+      - dados:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/api/saude', timeout=4)"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+
+  sensores:
+    image: alertacheia:local
+    profiles: ["demo"]
+    depends_on:
+      api:
+        condition: service_healthy
+    environment:
+      ALERTACHEIA_API: http://api:8080
+    env_file:
+      - path: .env
+        required: false
+    entrypoint: ["python", "-m", "iot.simulador"]
+    command: ["--ciclos", "16", "--intervalo", "2"]
+
+volumes:
+  dados:

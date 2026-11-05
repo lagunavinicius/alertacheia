@@ -1,0 +1,79 @@
+// AlertaCheia · medidas DAX do relatório Power BI
+// Crie uma tabela vazia "_Medidas" (Inserir dados → OK) e cole cada medida
+// com Modelagem → Nova medida. Formatos sugeridos estão nos comentários.
+
+// ---------------- Enchentes e antecedência (fato_eventos) ----------------
+Enchentes = COUNTROWS ( fato_eventos )                                   // número inteiro
+
+Antecedência IA (min) = AVERAGE ( fato_eventos[antecedencia_modelo_min] ) // 0,0
+Antecedência Régua (min) = AVERAGE ( fato_eventos[antecedencia_regra_min] )
+Antecedência Pré-alerta (min) = AVERAGE ( fato_eventos[antecedencia_prealerta_min] )
+
+Ganho de Antecedência (min) = [Antecedência IA (min)] - [Antecedência Régua (min)]
+
+Ganho de Antecedência (%) =                                               // porcentagem
+    DIVIDE ( [Ganho de Antecedência (min)], [Antecedência Régua (min)] )
+
+Enchentes sem Aviso Prévio =
+    CALCULATE ( [Enchentes], fato_eventos[antecedencia_modelo_min] = 0 )
+
+Enchentes Avisadas com 1h+ =
+    CALCULATE ( [Enchentes], fato_eventos[antecedencia_modelo_min] >= 60 )
+
+Pessoas Expostas = SUM ( fato_eventos[populacao_exposta] )
+
+Duração Média da Enchente (min) = AVERAGE ( fato_eventos[duracao_min] )
+
+// Só o período que o modelo não viu no treino: a métrica honesta para o pitch
+Antecedência IA no Teste (min) =
+    CALCULATE ( [Antecedência IA (min)], fato_eventos[conjunto] = "teste" )
+
+// ---------------- Chuva e nível (fato_leituras_hora) ----------------
+Chuva Total (mm) = SUM ( fato_leituras_hora[chuva_mm] )
+
+Chuva Média por Estação (mm) =
+    AVERAGEX ( VALUES ( dim_estacao[estacao_id] ), CALCULATE ( SUM ( fato_leituras_hora[chuva_mm] ) ) )
+
+Horas Acima do Transbordo =
+    DIVIDE ( SUM ( fato_leituras_hora[minutos_acima_transbordo] ), 60 )
+
+Nível Máx. % da Cota =                                                    // porcentagem
+    MAXX (
+        fato_leituras_hora,
+        DIVIDE ( fato_leituras_hora[nivel_max_cm], RELATED ( dim_estacao[cota_transbordo_cm] ) )
+    )
+
+Enchentes Acumuladas =
+    VAR ultimaData = MAX ( dim_calendario[data] )
+    RETURN
+        CALCULATE ( [Enchentes], FILTER ( ALL ( dim_calendario[data] ), dim_calendario[data] <= ultimaData ) )
+
+Dias com Enchente =
+    CALCULATE ( DISTINCTCOUNT ( fato_eventos[data] ) )
+
+// ---------------- Priorização ----------------
+Ranking de Risco =
+    RANKX ( ALL ( dim_estacao[bairro] ), [Horas Acima do Transbordo], , DESC, DENSE )
+
+Prioridade =
+    VAR horas = [Horas Acima do Transbordo]
+    VAR semAviso = [Enchentes sem Aviso Prévio]
+    RETURN
+        SWITCH (
+            TRUE (),
+            semAviso > 0, "Revisar estação",
+            horas >= 30, "Prioridade 1",
+            horas >= 10, "Prioridade 2",
+            "Monitorar"
+        )
+
+Cor Prioridade =                                                          // formatação condicional
+    SWITCH ( [Prioridade], "Prioridade 1", "#B91C1C", "Prioridade 2", "#C2410C",
+             "Revisar estação", "#A16207", "#1F7A4D" )
+
+// ---------------- Qualidade do dado (fato_qualidade) ----------------
+Leituras Recebidas = SUM ( fato_qualidade[recebidas] )
+Leituras em Quarentena = SUM ( fato_qualidade[quarentena] )
+Taxa de Quarentena = DIVIDE ( [Leituras em Quarentena], [Leituras Recebidas] )   // porcentagem
+Completude Média (%) = AVERAGE ( fato_qualidade[completude_pct] )
+Horas sem Sinal = DIVIDE ( SUM ( fato_qualidade[sem_sinal] ) * 15, 60 )

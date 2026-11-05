@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="512" height="512" viewBox="0 0 512 512">
+  <title>icone</title>
+  <g id="Layer_1" data-name="Layer 1">
+    <rect id="fundo-icone" x="0" y="0" width="512" height="512" fill="#0f1b2d"/>
+    <polygon id="A-reduzido" points="212,71.2 300,71.2 445.2,440.8 357.2,440.8 256,203.2 154.8,440.8 66.8,440.8" fill="#f5f3ee"/>
+    <path id="linha-de-alerta" d="M126.2 264.8 L385.8 264.8 C399.165 264.8 410 275.635 410 289 L410 289 C410 302.365 399.165 313.2 385.8 313.2 L126.2 313.2 C112.835 313.2 102 302.365 102 289 L102 289 C102 275.635 112.835 264.8 126.2 264.8 Z" fill="#e0571c"/>
+    <path id="agua-reduzida" d="M185.93 361.6 C214 343 236 345 256 357 C276 369 300 371 326.07 361.6 L357.2 440.8 L154.8 440.8 Z" fill="#7aa7d9"/>
+  </g>
+</svg>
