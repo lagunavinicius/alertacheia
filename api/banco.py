@@ -84,12 +84,17 @@ CREATE TABLE IF NOT EXISTS auditoria (
 """
 
 
+class BancoFechado(RuntimeError):
+    """A API está desligando: uma tarefa em segundo plano tentou usar o banco depois do fechamento."""
+
+
 class Banco:
     def __init__(self, caminho: Path | str):
         self.caminho = str(caminho)
         if self.caminho != ":memory:":
             Path(self.caminho).parent.mkdir(parents=True, exist_ok=True)
         self._lock = threading.Lock()
+        self._fechado = False
         self._con = sqlite3.connect(self.caminho, check_same_thread=False)
         self._con.row_factory = sqlite3.Row
         self._con.execute("PRAGMA journal_mode=WAL")
@@ -98,6 +103,8 @@ class Banco:
     @contextmanager
     def transacao(self):
         with self._lock:
+            if self._fechado:
+                raise BancoFechado("banco já fechado")
             try:
                 yield self._con
                 self._con.commit()
@@ -107,6 +114,8 @@ class Banco:
 
     def consultar(self, sql: str, params: tuple | dict = ()) -> list[dict]:
         with self._lock:
+            if self._fechado:
+                raise BancoFechado("banco já fechado")
             return [dict(r) for r in self._con.execute(sql, params).fetchall()]
 
     def um(self, sql: str, params: tuple | dict = ()) -> dict | None:
@@ -114,4 +123,8 @@ class Banco:
         return linhas[0] if linhas else None
 
     def fechar(self) -> None:
-        self._con.close()
+        # com o lock: uma simulação ainda rodando em outra thread nunca usa a conexão já fechada
+        # (no SQLite isso derruba o processo inteiro com segfault, não com uma exceção)
+        with self._lock:
+            self._fechado = True
+            self._con.close()

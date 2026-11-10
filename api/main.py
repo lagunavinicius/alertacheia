@@ -30,7 +30,7 @@ from fastapi.staticfiles import StaticFiles
 
 from alertacheia import config
 from api import esquemas, seguranca, servico
-from api.banco import Banco
+from api.banco import Banco, BancoFechado
 from ia import modelo, voz
 
 logging.basicConfig(level=logging.INFO, format='{"ts":"%(asctime)s","nivel":"%(levelname)s",'
@@ -292,9 +292,12 @@ async def simular(estacao_id: str, cenario: esquemas.Cenario, request: Request,
     leituras = servico.leituras_de_cenario(b, estacao_id, cenario.cenario, cenario.passos)
 
     async def executar():
-        for leitura in leituras:
-            await asyncio.to_thread(servico.registrar_leitura, b, leitura)
-            await asyncio.sleep(cenario.intervalo_s)
+        try:
+            for leitura in leituras:
+                await asyncio.to_thread(servico.registrar_leitura, b, leitura)
+                await asyncio.sleep(cenario.intervalo_s)
+        except BancoFechado:
+            log.info("simulação de %s interrompida: a API está desligando", estacao_id)
 
     request.app.state.simulacoes[estacao_id] = asyncio.create_task(executar())
     servico.auditar(b, operador, "simulacao", f"{estacao_id}:{cenario.cenario}")

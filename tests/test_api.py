@@ -142,3 +142,17 @@ def test_audio_do_alerta(cliente):
         assert r.status_code == 200 and r.headers["content-type"] == "audio/wav" and r.content[:4] == b"RIFF"
     else:
         assert r.status_code == 503
+
+
+def test_banco_fechado_nao_derruba_o_processo(tmp_path):
+    """CT-20: uma simulação que ainda grava quando a API desliga recebe um erro tratável, não um segfault."""
+    import pytest
+
+    from api.banco import Banco, BancoFechado
+
+    b = Banco(tmp_path / "t.db")
+    b.fechar()
+    with pytest.raises(BancoFechado):
+        b.consultar("SELECT 1")
+    with pytest.raises(BancoFechado), b.transacao() as con:
+        con.execute("SELECT 1")
