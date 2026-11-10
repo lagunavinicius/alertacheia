@@ -6,7 +6,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@custom-variant claro (&:where([data-tema="claro"], [data-tema="claro"] *));
+@custom-variant claro (&:where([data-tema="claro"]:not([data-contraste="alto"]), [data-tema="claro"]:not([data-contraste="alto"]) *));
 
 /* ---------- tokens: escuro (padrão) ---------- */
 :root {
@@ -19,6 +19,7 @@
   --rio: #5aa7ee;
   --linha: #ff6a2b;            /* a linha de alerta da marca */
   --linha-suave: rgb(255 106 43 / 0.16);
+  --linha-texto: #0a1322;      /* texto sobre o laranja: 6,5:1 */
   --texto: #eef2f7;
   --texto-2: #b3bfd0;
   --texto-3: #8c9ab0;
@@ -44,6 +45,7 @@
   --rio: #3f78b8;
   --linha: #c2410c;
   --linha-suave: rgb(194 65 12 / 0.1);
+  --linha-texto: #ffffff;      /* branco sobre o laranja escuro: 5,2:1 */
   --texto: #0f1b2d;
   --texto-2: #3f4b5c;
   --texto-3: #5b6573;
@@ -68,9 +70,20 @@
   --alerta: #ff9b5c; --alerta-fundo: rgb(255 155 92 / 0.14);
   --emergencia: #ff7070; --emergencia-fundo: rgb(255 112 112 / 0.16);
   --linha: #ff9b5c;
+  --linha-texto: #050505;
   color-scheme: dark;
 }
 html.fonte-grande { --base: 22px; }
+/* com letra grande o menu do topo precisa de mais largura: compacta até 1536 px e, abaixo de 1280 px, usa a barra inferior */
+@media (max-width: 1535px) {
+  html.fonte-grande .menu-icone { display: none; }
+  html.fonte-grande .rotulo-dc { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+}
+@media (min-width: 1024px) and (max-width: 1279px) {
+  html.fonte-grande .menu-topo { display: none; }
+  html.fonte-grande .menu-inferior { display: grid; }
+  html.fonte-grande { --barra-inferior: calc(68px + env(safe-area-inset-bottom)); }
+}
 
 /* ---------- ponte para o Tailwind (e para os componentes shadcn) ---------- */
 @theme inline {
@@ -83,6 +96,7 @@ html.fonte-grande { --base: 22px; }
   --color-rio: var(--rio);
   --color-linha: var(--linha);
   --color-linha-suave: var(--linha-suave);
+  --color-linha-texto: var(--linha-texto);
   --color-texto: var(--texto);
   --color-texto-2: var(--texto-2);
   --color-texto-3: var(--texto-3);
@@ -147,8 +161,8 @@ html.fonte-grande { --base: 22px; }
   opacity: 0.55;
 }
 /* no claro a água é rasa e clara: texto escuro por cima mantém contraste AA (≈4,7:1 no cinza do parágrafo) */
-[data-tema="claro"] .agua-corpo { opacity: 1; background: linear-gradient(180deg, #a9c8ea 0%, var(--agua-funda) 32%); }
-[data-tema="claro"] .agua-onda path { fill: #a9c8ea; }
+[data-tema="claro"]:not([data-contraste="alto"]) .agua-corpo { opacity: 1; background: linear-gradient(180deg, #a9c8ea 0%, var(--agua-funda) 32%); }
+[data-tema="claro"]:not([data-contraste="alto"]) .agua-onda path { fill: #a9c8ea; }
 .agua-onda { position: absolute; left: 0; width: 200%; height: 26px; bottom: calc(100% - 1px); }
 .agua-onda path { fill: var(--agua); }
 @media (prefers-reduced-motion: no-preference) { .agua-onda { animation: deriva 14s linear infinite; } }
@@ -160,7 +174,7 @@ html.fonte-grande { --base: 22px; }
 @media (min-width: 1100px) {
   .linha-limite { --mascara: linear-gradient(to right, transparent calc(50% + 300px), #000 calc(50% + 360px)); }
 }
-:root:not([data-tema="claro"]) .halo-texto { text-shadow: 0 0 14px var(--noite), 0 0 6px var(--noite); }
+:root:is(:not([data-tema="claro"]), [data-contraste="alto"]) .halo-texto { text-shadow: 0 0 14px var(--noite), 0 0 6px var(--noite); }
 
 /* ---------- risco: cor só no estado ---------- */
 .risco-normal { --risco: var(--normal); --risco-fundo: var(--normal-fundo); }
@@ -174,15 +188,16 @@ html.fonte-grande { --base: 22px; }
 .maplibregl-ctrl-group { background: var(--superficie-2) !important; border: 1px solid var(--borda) !important; box-shadow: none !important; }
 .maplibregl-ctrl-group button { width: 40px !important; height: 40px !important; }
 .maplibregl-ctrl-group button + button { border-top-color: var(--borda) !important; }
-:root:not([data-tema="claro"]) .maplibregl-ctrl-icon { filter: invert(1) brightness(1.4); }
+:root:is(:not([data-tema="claro"]), [data-contraste="alto"]) .maplibregl-ctrl-icon { filter: invert(1) brightness(1.4); }
 .ponto-estacao { position: relative; width: 22px; height: 22px; border-radius: 999px; padding: 0;
   background: var(--risco); border: 3px solid var(--noite); cursor: pointer; }
 .ponto-estacao::after { content: ""; position: absolute; inset: -12px; border-radius: 999px; background: var(--risco); opacity: 0; pointer-events: none; }
+.ponto-estacao::before { content: ""; position: absolute; inset: -14px; border-radius: 999px; } /* área de toque de 44 px */
 @media (prefers-reduced-motion: no-preference) { .ponto-estacao.pulsa::after { animation: pulso 1.8s ease-out infinite; } }
 @keyframes pulso { from { transform: scale(0.45); opacity: 0.6; } to { transform: scale(1.5); opacity: 0; } }
 
 /* ---------- gráficos (Recharts) ---------- */
-.recharts-cartesian-axis-tick-value { fill: var(--texto-3); font-size: 12px; }
+.recharts-cartesian-axis-tick-value { fill: var(--texto-2); font-size: 13px; }
 .recharts-default-tooltip { background: var(--superficie-2) !important; border: 1px solid var(--borda) !important; border-radius: 10px; color: var(--texto); }
 .recharts-legend-item-text { color: var(--texto-2) !important; }
 

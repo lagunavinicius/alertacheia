@@ -110,7 +110,7 @@ function LinkMenu({ para, rotulo, Icone, fim, inferior }) {
     >
       {({ isActive }) => (
         <>
-          <Icone size={inferior ? 24 : 20} weight={isActive ? "fill" : "regular"} aria-hidden="true" className={inferior ? undefined : "max-xl:hidden"} />
+          <Icone size={inferior ? 24 : 20} weight={isActive ? "fill" : "regular"} aria-hidden="true" className={inferior ? undefined : "menu-icone max-xl:hidden"} />
           <span>{rotulo}</span>
         </>
       )}
@@ -128,7 +128,7 @@ export default function App() {
       <header className="sticky top-0 z-30 border-b border-white/10 bg-[#0a1322]/92 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-2.5 md:px-8">
           <Marca />
-          <nav className="hidden items-center gap-1 lg:flex" aria-label="Principal">
+          <nav className="menu-topo hidden items-center gap-1 lg:flex" aria-label="Principal">
             {MENU.map((m) => <LinkMenu key={m.para} {...m} />)}
           </nav>
           <div className="flex items-center gap-1.5">
@@ -143,7 +143,7 @@ export default function App() {
               }
             >
               <ShieldCheck size={20} weight="bold" aria-hidden="true" />
-              <span className="max-[420px]:sr lg:max-xl:sr">Defesa Civil</span>
+              <span className="rotulo-dc max-[420px]:sr lg:max-xl:sr">Defesa Civil</span>
             </NavLink>
           </div>
         </div>
@@ -166,19 +166,26 @@ export default function App() {
       </main>
 
       <footer className="border-t border-borda px-5 pt-8 pb-10 text-center text-texto-3">
-        <p className="m-0">
-          Em perigo, ligue <a href="tel:199" className="font-bold text-texto">199</a> (Defesa Civil) ou{" "}
-          <a href="tel:193" className="font-bold text-texto">193</a> (Bombeiros).
+        {/* 199 e 193 são o que mais importa no rodapé: botões de toque grandes, não links miúdos */}
+        <p className="m-0 flex flex-wrap items-center justify-center gap-x-2 gap-y-1">
+          <span>Em perigo, ligue</span>
+          <a href="tel:199" className="inline-flex min-h-11 items-center rounded-full border border-borda-forte px-4 font-bold text-texto no-underline hover:bg-superficie-2">
+            199 <span className="ml-1 font-normal text-texto-2">Defesa Civil</span>
+          </a>
+          <span>ou</span>
+          <a href="tel:193" className="inline-flex min-h-11 items-center rounded-full border border-borda-forte px-4 font-bold text-texto no-underline hover:bg-superficie-2">
+            193 <span className="ml-1 font-normal text-texto-2">Bombeiros</span>
+          </a>
         </p>
-        <p className="mt-1 text-sm">
+        <p className="mt-3 mb-0 text-sm">
           AlertaCheia, Global Solution 2026/2, FIAP. Protótipo acadêmico: leituras e cotas são simuladas.{" "}
-          <NavLink to="/privacidade" className="underline">Como usamos os seus dados</NavLink>
+          <NavLink to="/privacidade" className="inline-block py-2.5 underline">Como usamos os seus dados</NavLink>
         </p>
       </footer>
 
       {/* no celular e no tablet, os 4 destinos do morador ficam ao alcance do polegar */}
       <nav
-        className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-4 border-t border-white/10 bg-[#0a1322] pb-[env(safe-area-inset-bottom)] lg:hidden"
+        className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-4 border-t border-white/10 bg-[#0a1322] pb-[env(safe-area-inset-bottom)] lg:hidden menu-inferior"
         aria-label="Principal (celular)"
       >
         {MENU.map((m) => <LinkMenu key={m.para} {...m} inferior />)}

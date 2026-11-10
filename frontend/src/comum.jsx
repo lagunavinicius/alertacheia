@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { WarningCircle, WifiSlash } from "@phosphor-icons/react";
+import { ClockCountdown, WarningCircle, WifiSlash } from "@phosphor-icons/react";
 import { obter } from "./api.js";
 import { cn } from "@/lib/utils";
 
@@ -117,6 +117,30 @@ export function AvisoOffline({ offline, guardadoEm }) {
       <span>
         Sem conexão. Mostrando a última informação recebida, das {hora}. Em perigo, ligue{" "}
         <a href="tel:199" className="underline"><strong>199</strong></a>.
+      </span>
+    </div>
+  );
+}
+
+/** Os sensores mandam leitura a cada 15 min: três leituras perdidas já indicam sensor fora do ar. */
+export const LIMITE_DEFASAGEM_MIN = 45;
+export const idadeMin = (iso) => (iso ? (Date.now() - new Date(iso).getTime()) / 60000 : null);
+/** Nas telas com várias estações, basta uma sem leitura nova para avisar: vale a mais antiga. */
+export const maisAntiga = (estacoes) =>
+  (estacoes || []).map((e) => e.ultima_leitura?.ts).filter(Boolean).sort()[0] || null;
+export const atrasadas = (estacoes) =>
+  (estacoes || []).filter((e) => defasado(e.ultima_leitura?.ts)).map((e) => e.bairro);
+export const defasado = (iso) => (idadeMin(iso) ?? 0) >= LIMITE_DEFASAGEM_MIN;
+
+/** Nunca mostrar dado velho como se fosse de agora: avisa quando a última leitura está atrasada. */
+export function AvisoDefasado({ ts, onde }) {
+  if (!defasado(ts)) return null;
+  return (
+    <div className="risco-atencao flex items-start gap-3 rounded-md bg-risco-fundo px-4 py-3 font-semibold text-risco" role="status">
+      <ClockCountdown size={22} weight="bold" className="mt-0.5 shrink-0" aria-hidden="true" />
+      <span>
+        Sem leitura nova{onde?.length ? ` em ${onde.join(", ")}` : ""} desde {horaCurta(ts)}. O sensor pode estar fora do
+        ar, então os números abaixo podem não ser os de agora. Em perigo, ligue <a href="tel:199" className="underline"><strong>199</strong></a>.
       </span>
     </div>
   );

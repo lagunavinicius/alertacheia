@@ -75,8 +75,9 @@ def redigir_deterministico(ctx: dict) -> dict:
     if ctx.get("ha_moradores_com_mobilidade_reduzida"):
         acoes.insert(1, f"Quem tem dificuldade para andar: peça ajuda a um vizinho agora ou ligue {tel}")
     motivo = ctx["motivos"][0] if ctx.get("motivos") else "a chuva está forte"
-    mensagem = (f"O sistema percebeu que {motivo}. "
-                f"{acoes[0]}. O abrigo mais próximo é {abrigo}.")
+    # quando a primeira ação já cita o abrigo (EMERGÊNCIA), não repetir o nome dele na mesma mensagem
+    abrigo_extra = "" if abrigo in acoes[0] else f" O abrigo mais próximo é {abrigo}."
+    mensagem = f"O sistema percebeu que {motivo}. {acoes[0]}.{abrigo_extra}"
     audio = (f"{titulo}. {mensagem}".replace(f"ligue {tel}", f"ligue {' '.join(tel)}")
              .replace(" cm ", " centímetros ").replace(" mm ", " milímetros ")
              .replace("2h", "duas horas"))

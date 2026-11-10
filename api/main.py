@@ -23,6 +23,7 @@ from datetime import date
 
 from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request, status
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.responses import FileResponse, JSONResponse, PlainTextResponse
 from fastapi.staticfiles import StaticFiles
 
@@ -63,6 +64,8 @@ async def ciclo_de_vida(app: FastAPI):
 
 app = FastAPI(title="AlertaCheia API", version="1.0.0", lifespan=ciclo_de_vida,
               description="Alerta comunitário de enchentes · Global Solution 2026/2 · FIAP")
+# o JS da tela inicial cai de ~515 kB para ~160 kB: importa no 4G fraco de quem está no temporal
+app.add_middleware(GZipMiddleware, minimum_size=1024)
 app.add_middleware(CORSMiddleware, allow_origins=config.ORIGENS_CORS, allow_methods=["GET", "POST", "DELETE"],
                    allow_headers=["Authorization", "Content-Type", "X-API-Key"])
 

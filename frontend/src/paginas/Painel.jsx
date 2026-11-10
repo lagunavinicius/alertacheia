@@ -6,7 +6,7 @@ import {
 import { toast } from "sonner";
 import { CaretDown, CheckCircle, CloudRain, SignOut } from "@phosphor-icons/react";
 import { enviar, salvarToken, tokenAtual } from "../api.js";
-import { Carregando, Erro, SEM_DADO, br, SeloRisco, Tubo, classeRisco, horaCurta, riscoDe, useDados } from "../comum.jsx";
+import { AvisoDefasado, Carregando, Erro, SEM_DADO, br, atrasadas, defasado, maisAntiga, SeloRisco, Tubo, classeRisco, horaCurta, riscoDe, useDados } from "../comum.jsx";
 import MapaEstacoes from "../components/MapaEstacoes.jsx";
 import { Button } from "@/components/ui/button";
 import { Card, CardTitulo } from "@/components/ui/card";
@@ -16,7 +16,6 @@ import { cn } from "@/lib/utils";
 
 const css = (v) => `var(${v})`;
 const frase = (t) => t.charAt(0).toUpperCase() + t.slice(1);
-const INPUT_DATA = "min-h-11 rounded-md border border-borda-forte bg-noite px-3 text-texto [color-scheme:dark] claro:[color-scheme:light]";
 
 function Seletor({ rotulo, className, value, onChange, opcoes }) {
   const id = useId();
@@ -47,6 +46,8 @@ function AoVivo({ aoSimular }) {
   const [estacao, setEstacao] = useState("EST-03");
   const [cenario, setCenario] = useState("tempestade");
   const [simulando, setSimulando] = useState(false);
+  const ultimaTs = maisAntiga(dados);
+  const atrasado = defasado(ultimaTs);
   const ordenadas = [...(dados || [])].sort(
     (a, b) => (b.ultima_leitura?.prob_transbordo || 0) - (a.ultima_leitura?.prob_transbordo || 0)
   );
@@ -68,10 +69,17 @@ function AoVivo({ aoSimular }) {
     <section aria-labelledby="titulo-ao-vivo" className="grid min-w-0 gap-4">
       <div className="flex flex-wrap items-center gap-3">
         <h2 id="titulo-ao-vivo" className="m-0 text-xl font-bold">Agora nas estações</h2>
-        <span className="inline-flex items-center gap-2 rounded-full bg-superficie-2 px-3 py-1 text-sm font-semibold text-texto-2">
-          <span className="size-2 rounded-full bg-normal motion-safe:animate-pulse" aria-hidden="true" /> ao vivo
-        </span>
+        {atrasado ? (
+          <span className="risco-atencao inline-flex items-center gap-2 rounded-full bg-risco-fundo px-3 py-1 text-sm font-semibold text-risco">
+            <span className="size-2 rounded-full bg-risco" aria-hidden="true" /> atrasado
+          </span>
+        ) : (
+          <span className="inline-flex items-center gap-2 rounded-full bg-superficie-2 px-3 py-1 text-sm font-semibold text-texto-2">
+            <span className="size-2 rounded-full bg-normal motion-safe:animate-pulse" aria-hidden="true" /> ao vivo
+          </span>
+        )}
       </div>
+      <AvisoDefasado ts={ultimaTs} onde={atrasadas(dados)} />
       <MapaEstacoes estacoes={dados} selecionada={estacao} onSelecionar={setEstacao} altura="h-[46dvh] min-h-80 lg:h-[440px]" />
       <ul className="m-0 grid list-none grid-cols-2 gap-2 p-0 sm:grid-cols-3 xl:grid-cols-5">
         {ordenadas.map((e) => {
@@ -140,10 +148,20 @@ function AlertasOperacao({ versao, aoExpirar }) {
     vistos.current = ids;
   }, [dados]);
 
+  // marca na hora (sem esperar o próximo polling) e leva o foco para a confirmação daquele card
+  const [atendidos, setAtendidos] = useState({});
+  const [focar, setFocar] = useState(null);
+  const [todos, setTodos] = useState(false);
+  useEffect(() => {
+    if (focar) document.getElementById(`atendido-${focar}`)?.focus();
+  }, [focar]);
+
   async function atender(id) {
     setAtendendo(id);
     try {
-      await enviar(`/api/painel/alertas/${id}/atender`, {}, true);
+      const r = await enviar(`/api/painel/alertas/${id}/atender`, {}, true);
+      setAtendidos((v) => ({ ...v, [id]: r?.atendido_por || "você" }));
+      setFocar(id);
       toast.success("Alerta marcado como atendido");
     } catch (err) {
       toast.error("Não foi possível marcar", { description: err.message });
@@ -152,18 +170,19 @@ function AlertasOperacao({ versao, aoExpirar }) {
     }
   }
 
-  const abertos = (dados || []).filter((a) => !a.atendido_em).length;
-  const lista = useRef(null);
-  const [rolavel, setRolavel] = useState(false);
-  useEffect(() => {
-    const el = lista.current;
-    if (el) setRolavel(el.scrollHeight > el.clientHeight + 4);
-  }, [dados]);
+  const itens = (dados || []).map((a) => (atendidos[a.id] && !a.atendido_em ? { ...a, atendido_em: "agora", atendido_por: atendidos[a.id] } : a));
+  const abertos = itens.filter((a) => !a.atendido_em).length;
+  const LIMITE = 3;
+  const visiveis = todos ? itens : itens.slice(0, LIMITE);
   return (
-    <section aria-labelledby="titulo-operacao" className="grid min-w-0 content-start gap-4">
+    <section aria-labelledby="titulo-operacao" className="grid min-w-0 content-start gap-4 max-lg:order-first">
       <div className="flex items-center gap-3">
         <h2 id="titulo-operacao" className="m-0 text-xl font-bold">Alertas da operação</h2>
-        {abertos > 0 && <span className="numero rounded-full bg-linha px-2.5 py-0.5 text-sm text-noite">{abertos}</span>}
+        {abertos > 0 && (
+          <span className="numero rounded-full bg-linha px-2.5 py-0.5 text-sm text-linha-texto">
+            {abertos}<span className="sr"> em aberto</span>
+          </span>
+        )}
       </div>
       {erro?.status !== 401 && <Erro erro={erro} />}
       {dados && dados.length === 0 && (
@@ -172,12 +191,9 @@ function AlertasOperacao({ versao, aoExpirar }) {
           <p className="mt-1 mb-0 text-sm text-texto-2">Use a chuva simulada para ver a fila funcionando.</p>
         </div>
       )}
-      {/* no desktop a fila rola dentro da coluna; o degradê no pé mostra que tem mais embaixo */}
-      <div className={cn("relative", rolavel && "lg:after:pointer-events-none lg:after:absolute lg:after:inset-x-0 lg:after:bottom-0 lg:after:h-16 lg:after:bg-gradient-to-t lg:after:from-noite lg:after:to-transparent")}>
-      <ol ref={lista} tabIndex={rolavel ? 0 : undefined} aria-label={rolavel ? "Fila de alertas (role para ver todos)" : undefined}
-        className="m-0 grid list-none gap-2 p-0 lg:max-h-[calc(440px+220px)] lg:overflow-y-auto lg:pr-1 lg:pb-10">
-        {(dados || []).map((a) => (
-          <li key={a.id} className={cn("rounded-md border border-borda bg-superficie p-4", classeRisco(a.risco), a.atendido_em && "opacity-70")}>
+      <ol className="m-0 grid list-none gap-2 p-0">
+        {visiveis.map((a) => (
+          <li key={a.id} className={cn("rounded-md border border-borda bg-superficie p-4", classeRisco(a.risco), a.atendido_em && "opacity-75")}>
             <div className="flex flex-wrap items-center gap-2">
               <SeloRisco risco={a.risco} />
               <span className="text-sm text-texto-3">{horaCurta(a.criado_em)}</span>
@@ -190,7 +206,7 @@ function AlertasOperacao({ versao, aoExpirar }) {
             </p>
             <div className="mt-3">
               {a.atendido_em ? (
-                <span className="inline-flex items-center gap-1.5 text-sm text-normal">
+                <span id={`atendido-${a.id}`} tabIndex={-1} className="inline-flex items-center gap-1.5 text-sm text-normal outline-none focus-visible:outline-2">
                   <CheckCircle size={18} weight="fill" aria-hidden="true" /> atendido por {a.atendido_por}
                 </span>
               ) : (
@@ -202,9 +218,29 @@ function AlertasOperacao({ versao, aoExpirar }) {
           </li>
         ))}
       </ol>
-      </div>
+      {itens.length > LIMITE && (
+        <Button variant="fantasma" size="pequeno" className="justify-self-start" aria-expanded={todos} onClick={() => setTodos((v) => !v)}>
+          {todos ? "Mostrar só os mais recentes" : `Ver todos os alertas (${itens.length})`}
+          <CaretDown size={16} weight="bold" className={cn("transition-transform", todos && "rotate-180")} aria-hidden="true" />
+        </Button>
+      )}
     </section>
   );
+}
+
+const NOMES_MES = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
+/** Meses entre o início e o fim do histórico ("AAAA-MM-DD"), como opções do seletor. */
+function meses(periodo) {
+  if (!periodo?.inicio || !periodo?.fim) return [];
+  const saida = [];
+  let [a, m] = periodo.inicio.split("-").map(Number);
+  const [af, mf] = periodo.fim.split("-").map(Number);
+  while (a < af || (a === af && m <= mf)) {
+    saida.push({ valor: `${a}-${String(m).padStart(2, "0")}`, rotulo: `${NOMES_MES[m - 1]} de ${a}` });
+    m += 1;
+    if (m > 12) { m = 1; a += 1; }
+  }
+  return saida;
 }
 
 function Historico({ estacoes }) {
@@ -213,21 +249,24 @@ function Historico({ estacoes }) {
   const { dados, erro, carregando } = useDados(`/api/painel/resumo?${query}`, { autenticado: true, intervalo: 10000 });
   const ind = dados?.indicadores;
   const periodo = dados?.periodo_disponivel;
-  const mudar = (campo) => (e) => setFiltros({ ...filtros, [campo]: e.target.value });
+  // o período é escolhido por mês da estação chuvosa: mais rápido que digitar duas datas e igual ao resto da interface
+  const mesFiltro = filtros.inicio ? filtros.inicio.slice(0, 7) : "";
+  const escolherMes = (mes) => {
+    if (!mes) return setFiltros({ ...filtros, inicio: "", fim: "" });
+    const [a, m] = mes.split("-").map(Number);
+    const ultimo = new Date(a, m, 0).getDate();
+    const ini = `${mes}-01` < periodo.inicio ? periodo.inicio : `${mes}-01`;
+    const fim = `${mes}-${ultimo}` > periodo.fim ? periodo.fim : `${mes}-${ultimo}`;
+    setFiltros({ ...filtros, inicio: ini, fim });
+  };
 
   return (
     <div className="grid grid-cols-[minmax(0,1fr)] gap-5">
       <form className="flex flex-wrap items-end gap-3" onSubmit={(e) => e.preventDefault()}>
         <Seletor rotulo="Estação" value={filtros.estacao_id} onChange={(v) => setFiltros({ ...filtros, estacao_id: v })} className="min-w-48"
           opcoes={[{ valor: "", rotulo: "Todas" }, ...(estacoes || []).map((e) => ({ valor: e.estacao_id, rotulo: e.bairro }))]} />
-        <label className="grid gap-1 text-sm text-texto-2">
-          De
-          <input type="date" className={INPUT_DATA} value={filtros.inicio} min={periodo?.inicio} max={periodo?.fim} onChange={mudar("inicio")} />
-        </label>
-        <label className="grid gap-1 text-sm text-texto-2">
-          Até
-          <input type="date" className={INPUT_DATA} value={filtros.fim} min={periodo?.inicio} max={periodo?.fim} onChange={mudar("fim")} />
-        </label>
+        <Seletor rotulo="Período" value={mesFiltro} onChange={escolherMes} className="min-w-56"
+          opcoes={[{ valor: "", rotulo: "Toda a estação chuvosa" }, ...meses(periodo)]} />
         {query && (
           <Button size="pequeno" variant="fantasma" onClick={() => setFiltros({ estacao_id: "", inicio: "", fim: "" })}>Limpar filtros</Button>
         )}
@@ -270,7 +309,7 @@ function Historico({ estacoes }) {
 
           <Card className="p-0 md:p-0">
             <CardTitulo as="h3" className="m-0 px-5 pt-5 md:px-6">Onde agir primeiro</CardTitulo>
-            <div className="mt-3 overflow-x-auto">
+            <div className="mt-3 overflow-x-auto" role="region" aria-label="Tabela onde agir primeiro (role para o lado)" tabIndex={0}>
               <table className="w-full border-collapse text-left [&_td]:border-t [&_td]:border-borda [&_td]:px-5 [&_td]:py-3 [&_th]:px-5 [&_th]:py-2 [&_th]:text-sm [&_th]:font-semibold [&_th]:text-texto-3">
                 <thead>
                   <tr><th>Bairro</th><th>Enchentes</th><th>Horas acima</th><th>Chuva (mm)</th><th>Aviso médio (min)</th></tr>
@@ -285,6 +324,7 @@ function Historico({ estacoes }) {
                 </tbody>
               </table>
             </div>
+            <p className="m-0 px-5 pt-2 pb-4 text-sm text-texto-3 sm:hidden">Arraste a tabela para o lado para ver todas as colunas.</p>
           </Card>
 
           <details className="group rounded-lg border border-borda bg-superficie">
@@ -292,7 +332,7 @@ function Historico({ estacoes }) {
               Lista de enchentes ({dados.eventos.length})
               <CaretDown size={18} weight="bold" className="transition-transform group-open:rotate-180" aria-hidden="true" />
             </summary>
-            <div className="overflow-x-auto pb-2">
+            <div className="overflow-x-auto pb-2" role="region" aria-label="Lista de enchentes (role para o lado)" tabIndex={0}>
               <table className="w-full border-collapse text-left text-sm [&_td]:border-t [&_td]:border-borda [&_td]:px-5 [&_td]:py-2.5 [&_td]:whitespace-nowrap [&_th]:px-5 [&_th]:py-2 [&_th]:font-semibold [&_th]:text-texto-3">
                 <thead>
                   <tr><th>Início</th><th>Estação</th><th>Duração</th><th>Pico (cm)</th><th>Chuva (mm)</th><th>Aviso IA</th><th>Aviso régua</th></tr>
@@ -307,6 +347,7 @@ function Historico({ estacoes }) {
                 </tbody>
               </table>
             </div>
+            <p className="m-0 px-5 pt-2 pb-4 text-sm text-texto-3 sm:hidden">Arraste a tabela para o lado para ver todas as colunas.</p>
           </details>
         </>
       )}

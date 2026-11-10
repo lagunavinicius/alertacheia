@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { LazyMotion, domAnimation, m, useReducedMotion } from "motion/react";
 import { ArrowRight, CloudRain, Drop, MapPin, Plant, SpeakerHigh } from "@phosphor-icons/react";
-import { AvisoOffline, Carregando, Erro, RISCO, br, SeloRisco, classeRisco, horaCurta, riscoDe, useDados } from "../comum.jsx";
+import { AvisoDefasado, AvisoOffline, Carregando, Erro, RISCO, br, SeloRisco, classeRisco, horaCurta, riscoDe, useDados } from "../comum.jsx";
 import { Button } from "@/components/ui/button";
 import { Selecao } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
@@ -49,7 +49,7 @@ function Agua({ pct }) {
       </m.div>
       {/* a linha tem máscara (some ou esmaece atrás do texto); o rótulo fica fora dela para não esmaecer junto */}
       <div className="linha-limite" style={{ bottom: `${LIMITE}%` }} />
-      <span className="absolute right-4 text-sm font-semibold text-linha" style={{ bottom: `calc(${LIMITE}% + 6px)` }}>
+      <span className="absolute right-4 text-sm font-semibold text-linha max-sm:hidden" style={{ bottom: `calc(${LIMITE}% + 6px)` }}>
         limite do córrego
       </span>
     </div>
@@ -112,6 +112,7 @@ export default function MeuBairro() {
 
         <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-5 px-5 pt-6 pb-8 md:px-8 md:pt-10">
           <AvisoOffline offline={offline} guardadoEm={guardadoEm} />
+          <AvisoDefasado ts={ult?.ts} />
           <div className="flex flex-wrap items-center gap-3">
             <SeletorBairro estacoes={estacoes} valor={est.estacao_id} onChange={trocar} />
             <span className="text-sm text-texto-3">atualizado {horaCurta(ult?.ts)}</span>
@@ -119,7 +120,10 @@ export default function MeuBairro() {
 
           {/* só o essencial é "ao vivo": o leitor de tela anuncia quando o risco muda, não a cada leitura */}
           <div aria-live="polite" aria-atomic="true" className="halo-texto grid max-w-3xl gap-4">
-            <SeloRisco risco={risco} grande className="justify-self-start" />
+            <div className="flex flex-wrap items-center gap-3">
+              <SeloRisco risco={risco} grande />
+              {alerta && <span className="text-sm text-texto-2">alerta emitido em {horaCurta(alerta.criado_em)}</span>}
+            </div>
             <h1 id="titulo-risco" className="m-0 text-4xl leading-[1.05] font-bold md:text-6xl">
               {alerta ? alerta.titulo : r.frase}
             </h1>

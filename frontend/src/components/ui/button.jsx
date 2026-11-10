@@ -9,7 +9,7 @@ const variantes = cva(
     variants: {
       variant: {
         padrao: "bg-texto text-noite hover:bg-texto/85",
-        alerta: "bg-linha text-white hover:bg-linha/90",
+        alerta: "bg-linha text-linha-texto hover:bg-linha/90",
         contorno: "border border-borda-forte bg-transparent text-texto hover:bg-superficie-2",
         fantasma: "bg-transparent text-texto hover:bg-superficie-2",
         claro: "bg-white text-[#0f1b2d] hover:bg-white/90",

@@ -20,9 +20,14 @@ const ESTILO = {
 };
 
 function useTema() {
-  const [tema, setTema] = useState(() => document.documentElement.dataset.tema || "escuro");
+  // o alto contraste usa a paleta escura em qualquer tema, então o mapa também fica escuro
+  const ler = () => {
+    const d = document.documentElement.dataset;
+    return d.contraste === "alto" ? "escuro" : d.tema || "escuro";
+  };
+  const [tema, setTema] = useState(ler);
   useEffect(() => {
-    const obs = new MutationObserver(() => setTema(document.documentElement.dataset.tema || "escuro"));
+    const obs = new MutationObserver(() => setTema(ler()));
     obs.observe(document.documentElement, { attributes: true, attributeFilter: ["data-tema", "data-contraste"] });
     return () => obs.disconnect();
   }, []);
@@ -44,6 +49,17 @@ export default function MapaEstacoes({ estacoes, selecionada, onSelecionar, clas
   const tema = useTema();
   const mapa = useRef(null);
   const [falhou, setFalhou] = useState(false);
+
+  // o estilo do OpenFreeMap cita ícones que não publica (ex.: "wood-pattern"): um pixel vazio evita o aviso.
+  // O react-map-gl cria o mapa de forma assíncrona; o primeiro "styledata" chega antes de desenhar as camadas.
+  const preencherImagens = useCallback((e) => {
+    const m = e.target;
+    if (m.__imagensVazias) return;
+    m.__imagensVazias = true;
+    const vazia = (id) => { if (!m.hasImage(id)) m.addImage(id, { width: 1, height: 1, data: new Uint8Array(4) }); };
+    ["wood-pattern", "circle-11"].forEach(vazia); // pedidos antes do evento de imagem ausente
+    m.on("styleimagemissing", (ev) => vazia(ev.id));
+  }, []);
 
   const aoCarregar = useCallback((e) => {
     const m = e.target;
@@ -73,6 +89,7 @@ export default function MapaEstacoes({ estacoes, selecionada, onSelecionar, clas
         ref={mapa}
         initialViewState={{ longitude: -46.6, latitude: -23.53, zoom: 10 }}
         mapStyle={ESTILO[tema] || ESTILO.escuro}
+        onStyleData={preencherImagens}
         onLoad={aoCarregar}
         onError={(e) => { if (!mapa.current) setFalhou(true); else console.warn(e?.error); }}
         attributionControl={{ compact: true }}
