@@ -13,6 +13,9 @@ joblib>=1.4
 # IA generativa (opcional em execução: sem chave, o alerta cai no gerador determinístico)
 anthropic>=0.40
 
+# Voz neural do "Ouvir o alerta" (modelo Piper pt-BR, roda local; sem ele o navegador fala)
+piper-tts>=1.3
+
 # API e segurança
 fastapi>=0.110
 uvicorn[standard]>=0.29

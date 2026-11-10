@@ -36,6 +36,9 @@ GOLD = DATALAKE / "gold"          # tabelas analíticas (Power BI, modelo, paine
 QUARENTENA = DATALAKE / "quarentena"
 MODELOS = Path(os.environ.get("ALERTACHEIA_MODELOS", RAIZ / "ia" / "artefatos"))
 BANCO = Path(os.environ.get("ALERTACHEIA_BANCO", RAIZ / "data" / "alertacheia.db"))
+# Voz neural do "Ouvir o alerta" (Piper, pt-BR). Sem o arquivo, o navegador usa a voz do sistema.
+VOZ_MODELO = Path(os.environ.get("ALERTACHEIA_VOZ", RAIZ / "modelos" / "voz" / "pt_BR-faber-medium.onnx"))
+AUDIO_CACHE = BANCO.parent / "audio"
 
 # --- Série histórica simulada ---------------------------------------------
 DIAS_HISTORICO = 120

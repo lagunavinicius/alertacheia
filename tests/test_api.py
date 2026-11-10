@@ -126,3 +126,19 @@ def test_ct18_cabecalhos_de_seguranca(cliente):
     assert r.headers["X-Content-Type-Options"] == "nosniff"
     assert r.headers["X-Frame-Options"] == "DENY"
     assert "default-src 'self'" in r.headers["Content-Security-Policy"]
+
+
+def test_audio_do_alerta(cliente):
+    """CT-19: o alerta tem voz neural; sem o modelo instalado, 503 (o navegador usa a voz do sistema)."""
+    from ia import voz
+
+    assert cliente.get("/api/alertas/999999/audio").status_code == 404
+    assert voz.preparar_texto("EMERGÊNCIA: enchente em Vila Aricanduva") == "Emergência: enchente em Vila Aricanduva"
+    alertas = cliente.get("/api/alertas").json()
+    if not alertas:
+        return
+    r = cliente.get(f"/api/alertas/{alertas[0]['id']}/audio")
+    if voz.disponivel():
+        assert r.status_code == 200 and r.headers["content-type"] == "audio/wav" and r.content[:4] == b"RIFF"
+    else:
+        assert r.status_code == 503

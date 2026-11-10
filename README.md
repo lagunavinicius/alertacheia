@@ -44,6 +44,12 @@ python -m venv .venv
 .venv\Scripts\python run_pipeline.py
 ```
 
+Voz neural do "Ouvir o alerta" (opcional, ~60 MB; sem ela o navegador lê o alerta com a voz do sistema):
+
+```bash
+.venv\Scripts\python -m piper.download_voices pt_BR-faber-medium --data-dir modelos/voz
+```
+
 ```bash
 npm --prefix frontend install
 ```

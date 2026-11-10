@@ -26,13 +26,16 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 
 COPY alertacheia/ alertacheia/
 COPY dados/ dados/
-COPY ia/prompts.py ia/alerta_generativo.py ia/modelo.py ia/treinar.py ia/__init__.py ia/
+COPY ia/prompts.py ia/alerta_generativo.py ia/modelo.py ia/treinar.py ia/voz.py ia/__init__.py ia/
 COPY api/ api/
 COPY iot/ iot/
 COPY run_pipeline.py ./
 COPY --from=frontend /app/frontend/dist frontend/dist
 
 # Data Lake + modelo dentro da imagem: o container sobe pronto, sem passo manual
+# Voz neural pt-BR do "Ouvir o alerta" (Piper, ~60 MB), baixada do repositório oficial no build
+RUN python -m piper.download_voices pt_BR-faber-medium --data-dir /app/modelos/voz
+
 RUN python run_pipeline.py \
     && useradd --create-home --uid 10001 alerta \
     && mkdir -p /app/data \

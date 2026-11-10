@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { LazyMotion, domAnimation, m, useReducedMotion } from "motion/react";
-import { ArrowRight, CloudRain, Drop, MapPin, Plant, SpeakerHigh } from "@phosphor-icons/react";
+import { ArrowRight, CloudRain, Drop, MapPin, Plant } from "@phosphor-icons/react";
 import { AvisoDefasado, AvisoOffline, Carregando, Erro, RISCO, br, SeloRisco, classeRisco, horaCurta, riscoDe, useDados } from "../comum.jsx";
 import { Button } from "@/components/ui/button";
+import { OuvirAlerta } from "@/components/OuvirAlerta";
 import { Selecao } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 
@@ -20,15 +21,6 @@ const ORIENTACAO_NORMAL = [
   "Salve o número da Defesa Civil: 199.",
   "Cadastre seu telefone para receber o aviso antes da água chegar.",
 ];
-
-function ouvir(texto) {
-  if (!("speechSynthesis" in window)) return;
-  window.speechSynthesis.cancel();
-  const fala = new SpeechSynthesisUtterance(texto);
-  fala.lang = "pt-BR";
-  fala.rate = 0.95;
-  window.speechSynthesis.speak(fala);
-}
 
 function Agua({ pct }) {
   const reduzir = useReducedMotion();
@@ -134,9 +126,7 @@ export default function MeuBairro() {
             </p>
           </div>
           {alerta && (
-            <Button variant="claro" className="self-start" onClick={() => ouvir(alerta.texto_audio)}>
-              <SpeakerHigh size={22} weight="bold" aria-hidden="true" /> Ouvir o alerta
-            </Button>
+            <OuvirAlerta alertaId={alerta.id} texto={alerta.texto_audio} />
           )}
 
           <div className="mt-auto flex flex-wrap items-end justify-between gap-6 pt-10">

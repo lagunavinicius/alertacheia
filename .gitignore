@@ -17,6 +17,8 @@ data/.chave_dados
 datalake/
 ia/artefatos/
 data/
+# voz neural (~60 MB): baixada pelo comando do README e no build do Docker
+modelos/voz/
 
 # Frontend
 frontend/node_modules/

@@ -16,6 +16,7 @@ from __future__ import annotations
 import asyncio
 import logging
 import mimetypes
+import threading
 import time
 from collections import Counter
 from contextlib import asynccontextmanager
@@ -24,13 +25,13 @@ from datetime import date
 from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
-from fastapi.responses import FileResponse, JSONResponse, PlainTextResponse
+from fastapi.responses import FileResponse, JSONResponse, PlainTextResponse, Response
 from fastapi.staticfiles import StaticFiles
 
 from alertacheia import config
 from api import esquemas, seguranca, servico
 from api.banco import Banco
-from ia import modelo
+from ia import modelo, voz
 
 logging.basicConfig(level=logging.INFO, format='{"ts":"%(asctime)s","nivel":"%(levelname)s",'
                                                '"origem":"%(name)s","msg":"%(message)s"}')
@@ -56,6 +57,11 @@ async def ciclo_de_vida(app: FastAPI):
             log.info("estado inicial semeado com %s leituras", semeadas)
     except modelo.ModeloAusente as erro:
         log.warning(str(erro))
+    if voz.disponivel():
+        # carrega a voz neural em segundo plano: o primeiro "Ouvir o alerta" não espera ~3 s
+        threading.Thread(target=voz.aquecer, name="voz", daemon=True).start()
+    else:
+        log.info("voz neural ausente (%s): o navegador usa a voz do sistema", config.VOZ_MODELO)
     yield
     for tarefa in app.state.simulacoes.values():
         tarefa.cancel()
@@ -176,6 +182,19 @@ def detalhar_estacao(estacao_id: str, request: Request, horas: int = Query(24, g
 def alertas_publicos(request: Request, estacao_id: str | None = Query(None, pattern=esquemas.ESTACAO_RE),
                      limite: int = Query(20, ge=1, le=100)):
     return servico.listar_alertas(banco(request), estacao_id, "populacao", limite)
+
+
+@app.get("/api/alertas/{alerta_id}/audio", tags=["cidadao"], response_class=Response,
+         responses={200: {"content": {"audio/wav": {}}}, 503: {"description": "voz neural não instalada"}})
+def audio_do_alerta(alerta_id: int, request: Request):
+    """O alerta lido em voz alta por um modelo neural (Piper, pt-BR) que roda no servidor."""
+    alerta = banco(request).um("SELECT texto_audio FROM alertas WHERE id = ? AND publico = 'populacao'", (alerta_id,))
+    if not alerta:
+        raise HTTPException(404, "alerta não encontrado")
+    if not voz.disponivel():
+        raise HTTPException(503, "voz neural indisponível; use a voz do navegador")
+    return Response(voz.audio_wav(alerta["texto_audio"]), media_type="audio/wav",
+                    headers={"Cache-Control": "public, max-age=86400"})
 
 
 @app.post("/api/moradores", status_code=201, tags=["cidadao"])

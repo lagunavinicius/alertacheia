@@ -31,7 +31,9 @@ alerta costuma chegar à noite, no meio do temporal. Há tema claro e alto contr
 
 **Acessibilidade e inclusão:**
 - botões de **letra grande** e **alto contraste**;
-- **leitura do alerta em voz alta** (Web Speech API);
+- **leitura do alerta em voz alta com voz neural**: o servidor gera o áudio com um modelo Piper
+  em português do Brasil (`ia/voz.py`, roda local, sem chave e sem mandar o texto para fora) e
+  guarda em cache; sem o modelo ou sem internet, o navegador lê com a melhor voz pt-BR do aparelho;
 - link "pular para o conteúdo";
 - `aria-live` no status do bairro;
 - foco visível (anel laranja) e alvos de toque de 48 px;
