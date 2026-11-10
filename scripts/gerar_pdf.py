@@ -20,6 +20,7 @@ import re
 import shutil
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 import markdown
@@ -190,12 +191,29 @@ figcaption { font-size: 8.5pt; color: #5b6573; margin-top: 4px; }
     navegador = next((n for n in NAVEGADORES if Path(n).exists()), None) or shutil.which("msedge") or shutil.which("google-chrome")
     if not navegador:
         sys.exit(f"Edge/Chrome não encontrado. Abra {SAIDA_HTML} no navegador e use Imprimir → Salvar como PDF.")
+    inicio = time.time()
     subprocess.run([navegador, "--headless=new", "--disable-gpu", "--no-pdf-header-footer",  # noqa: S603
                     f"--print-to-pdf={SAIDA_PDF}", SAIDA_HTML.as_uri()], check=True, capture_output=True, timeout=120)
+    _esperar_pdf(inicio)
     pendencias = re.findall(r"PENDENTE: ([^.<]+)", corpo)
     print(f"PDF gerado: {SAIDA_PDF}")
     for p in pendencias:
         print(f"  pendente: {p}")
+
+
+def _esperar_pdf(inicio: float, limite_s: float = 60) -> None:
+    """No Windows o msedge.exe devolve o controle antes do processo filho terminar de gravar o PDF:
+    espera o arquivo ser reescrito depois do início e parar de crescer."""
+    anterior = -1
+    fim = time.time() + limite_s
+    while time.time() < fim:
+        if SAIDA_PDF.exists() and SAIDA_PDF.stat().st_mtime >= inicio:
+            tamanho = SAIDA_PDF.stat().st_size
+            if tamanho == anterior and tamanho > 0:
+                return
+            anterior = tamanho
+        time.sleep(0.5)
+    raise SystemExit("O navegador não terminou de gravar o PDF a tempo.")
 
 
 if __name__ == "__main__":
